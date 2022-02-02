@@ -1,0 +1,48 @@
+.HeroCard {
+    width: 300px;
+    height: 500px;
+    border: solid white 1px;
+    border-radius: 2%;
+    padding: 10px 20px;
+}
+
+.HeroStats {
+    margin-bottom: 20px;
+}
+
+.HeroStats .Title {
+    margin-bottom: 5px;
+}
+
+.HeroStats .StatGroup {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.HeroStat {
+    display: flex;
+    width: 130px;
+    padding: 5px 10px 7px 10px;
+    font-size: 0.8em;
+}
+
+.HeroStat .Name, 
+.HeroStat .Value {
+    width: 50%;
+}
+
+.HeroStat .Name {
+    text-align: left;
+}
+
+.HeroStat .Value {
+    text-align: right;
+}
+
+.HeroStat .Main {
+    color: green;
+}
+
+.HeroStat .Minor {
+    color: skyblue;
+}

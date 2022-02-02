@@ -1,0 +1,48 @@
+{
+    "agility": 8,
+    "assistantId": {
+        "id": "0"
+    },
+    "currentQuest": "0x0000000000000000000000000000000000000000",
+    "dexterity": 15,
+    "endurance": 10,
+    "firstName": 1313,
+    "fishing": 4,
+    "foraging": 118,
+    "gardening": 0,
+    "gender": "male",
+    "generation": 0,
+    "hp": 214,
+    "id": "104",
+    "intelligence": 9,
+    "lastName": 743,
+    "level": 4,
+    "luck": 12,
+    "mainClass": "Pirate",
+    "maxSummons": 11,
+    "mining": 0,
+    "mp": 44,
+    "owner": {
+        "created": "1631737610",
+        "id": "0xcb672abc0ed4d2f58fb518ccfba841ce4cb1b4a1",
+        "name": "Cloud9"
+    },
+    "profession": "foraging",
+    "rarity": 3,
+    "saleAuction": null,
+    "shiny": false,
+    "stamina": 27,
+    "staminaFullAt": "1642732026",
+    "statBoost1": "DEX",
+    "statBoost2": "WIS",
+    "strength": 17,
+    "subClass": "Thief",
+    "summonedTime": "1633046440",
+    "summonerId": {
+        "id": "0"
+    },
+    "summons": 27,
+    "vitality": 10,
+    "wisdom": 7,
+    "xp": "2498"
+}
