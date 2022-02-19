@@ -1,48 +1,49 @@
-.HeroCard {
+/* .hero-card {
     width: 300px;
     height: 500px;
     border: solid white 1px;
     border-radius: 2%;
     padding: 10px 20px;
 }
+ */
 
-.HeroStats {
+.hero-stat-section {
     margin-bottom: 20px;
 }
 
-.HeroStats .Title {
+.hero-stat-section .title {
     margin-bottom: 5px;
 }
 
-.HeroStats .StatGroup {
+.hero-stat-section .stat-group {
     display: flex;
     flex-wrap: wrap;
 }
 
-.HeroStat {
+.hero-stat {
     display: flex;
     width: 130px;
     padding: 5px 10px 7px 10px;
     font-size: 0.8em;
 }
 
-.HeroStat .Name, 
-.HeroStat .Value {
+.hero-stat .name, 
+.hero-stat .value {
     width: 50%;
 }
 
-.HeroStat .Name {
+.hero-stat .name {
     text-align: left;
 }
 
-.HeroStat .Value {
+.hero-stat .value {
     text-align: right;
 }
 
-.HeroStat .Main {
+.hero-stat .main {
     color: green;
 }
 
-.HeroStat .Minor {
+.hero-stat .minor {
     color: skyblue;
 }

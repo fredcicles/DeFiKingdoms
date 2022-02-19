@@ -3,10 +3,11 @@ import { GraphQLClient, gql } from 'graphql-request'
 
 const getHeroData = async (skip) => {
     // Then define our endpoint URL
-    const endpoint = 'http://graph3.defikingdoms.com/subgraphs/name/defikingdoms/apiv5'
+    const apiv5_endpoint = 'http://graph3.defikingdoms.com/subgraphs/name/defikingdoms/apiv5'
+	const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
 
     // Create a new GQL Client
-    const graphQLClient = new GraphQLClient(endpoint, {
+    const graphQLClient = new GraphQLClient(apiv6_endpoint, {
         headers: {
             'Content-Type': 'application/json'
         },

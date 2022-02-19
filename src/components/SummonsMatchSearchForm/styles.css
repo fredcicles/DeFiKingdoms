@@ -1,6 +1,7 @@
 .SummonsMatchSearchForm {
     display: flex;
     align-items: flex-end;
+    margin: 10px;
 }
 
 .hero-id-selecter, .summoned-class-selecter {

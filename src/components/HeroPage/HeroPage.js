@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import getHeroData from '../../services/hero.service'
+//import React, { useEffect, useState } from 'react'
+//import getHeroData from '../../services/hero.service'
 //import heroes from '../../data/heroes.json'
 import hero from '../../data/hero.json'
-import HeroCard from '../HeroCard/HeroCard';
+import HeroCard from '../HeroCard';
 
 const HeroPage = () => {
-    const [heroCount, setHeroCount] = useState(-1)
+    //const [heroCount, setHeroCount] = useState(-1)
 
     /*
     useEffect(() => {

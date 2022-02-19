@@ -5,7 +5,7 @@ import './styles.css'
 
 const HeroCard = ({ hero }) => {
     return (
-        <div className='HeroCard'>
+        <div className='hero-card'>
             <StatSection title='Stats'>
                 <HeroStat name='STR' value={hero.strength} main={hero.statBoost1 === 'STR'} minor={hero.statBoost2 === 'STR'} />
                 <HeroStat name='DEX' value={hero.dexterity} main={hero.statBoost1 === 'DEX'} minor={hero.statBoost2 === 'DEX'} />

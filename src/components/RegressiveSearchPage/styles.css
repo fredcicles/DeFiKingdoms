@@ -1,0 +1,9 @@
+.hero-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.hero-list .main-hero {
+    border-radius: 7%;
+    background-color: red;
+}

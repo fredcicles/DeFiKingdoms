@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { getComparator, stableSort } from '../../helpers/sorting.helpers'
 import Box from '@mui/material/Box'
@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import EnhancedTableHead from './EnhancedTableHead'
 import EnhancedTableToolbar from './EnhancedTableToolbar'
-
+import EnhancedTableCell from './EnhancedTableCell'
 
 const EnhancedTable = ({ headings, rows, title }) => {
     const [order, setOrder] = React.useState('asc')
@@ -82,13 +82,6 @@ const EnhancedTable = ({ headings, rows, title }) => {
     const isSelected = (name) => selected.indexOf(name) !== -1
 
 
-    const renderTableCells = (header, row, index, labelId) => {
-        return index === 0 ?
-            <TableCell key={`${header.id}`} component='th' id={labelId} scope='row' padding='none'>{row[header.id]}</TableCell> :
-            <TableCell key={`${header.id}`} align='right'>{row[header.id]}</TableCell>
-    }
-
-
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
@@ -129,7 +122,7 @@ const EnhancedTable = ({ headings, rows, title }) => {
                                             role='checkbox'
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.name}
+                                            key={row.id}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding='checkbox'>
@@ -141,12 +134,13 @@ const EnhancedTable = ({ headings, rows, title }) => {
                                                     }}
                                                 />
                                             </TableCell>
-                                            {headings.map((header, index) => renderTableCells(header, row, index, labelId))}
+                                            {headings.map((header) => <EnhancedTableCell key={header.id} header={header} row={row} labelId={labelId} />)}
                                         </TableRow>
                                     )
                                 })}
                             {emptyRows > 0 && (
                                 <TableRow
+                                    key='empty-rows'
                                     style={{
                                         height: (dense ? 33 : 53) * emptyRows,
                                     }}

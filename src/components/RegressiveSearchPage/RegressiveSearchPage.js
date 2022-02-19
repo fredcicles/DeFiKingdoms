@@ -1,64 +1,77 @@
-import React from 'react'
+import React, { useState } from 'react'
 //import PropTypes from 'prop-types'
+import getAuctionData from '../../services/auction.service'
 import { getHeroesChain } from '@thanpolas/dfk-hero'
 //import { getHeroesChain } from '../../services/DfkHero'
-import SummonsMatchSearchForm from '../SummonsMatchSearchForm/SummonsMatchSearchForm'
-import SummonsMatchList from '../SummonsMatchList/SummonsMatchList'
+import { canHeroesSummonClass } from '../../helpers/genes.helpers'
+import SummonsMatchSearchForm from '../SummonsMatchSearchForm'
+import SummonsMatchList from '../SummonsMatchList'
+import HeroSnapshot from '../HeroSnapshot'
+import './styles.css'
+
 
 const RegressiveSearchPage = () => {
+    const [loaded, setLoaded] = useState(false)
+    const [loadingAuctionData, setLoadingAuctionData] = useState(false)
 
-    // ---  Replace this with real data
-
-    function createData(name, calories, fat, carbs, protein) {
-        return {
-            name,
-            calories,
-            fat,
-            carbs,
-            protein,
-        }
-    }
-
-    const rows = [
-        createData('Cupcake', 305, 3.7, 67, 4.3),
-        createData('Donut', 452, 25.0, 51, 4.9),
-        createData('Eclair', 262, 16.0, 24, 6.0),
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-        createData('Gingerbread', 356, 16.0, 49, 3.9),
-        createData('Honeycomb', 408, 3.2, 87, 6.5),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-        createData('Jelly Bean', 375, 0.0, 94, 0.0),
-        createData('KitKat', 518, 26.0, 65, 7.0),
-        createData('Lollipop', 392, 0.2, 98, 0.0),
-        createData('Marshmallow', 318, 0, 81, 2.0),
-        createData('Nougat', 360, 19.0, 9, 37.0),
-        createData('Oreo', 437, 18.0, 63, 4.0),
-    ]
-
-    // ---  Replace this with real data
-
-
-
-
+    const [mainHero, setMainHero] = useState()
+    const [matchingHeroes, setMatchingHeroes] = useState([])
 
     // Looks up the selected Hero
     const handleHeroChange = (heroId) => {
         console.log(`New Hero Selected: ${heroId}`)
+
+        if (heroId) {
+            setMainHero()
+            getHeroesChain([heroId])
+                .then(data => {
+                    setMainHero(data[0])
+                })
+        }
     }
 
     // Creates a new search for the specified search criteria
-    const handleSubmit = (searchCriteria) => {
+    const handleSubmit = async (searchCriteria) => {
         console.log(JSON.stringify(searchCriteria))
-        getHeroesChain([47817, 25025, 95734])
-            .then(results => {
-                console.log(JSON.stringify(results))
+
+        setMatchingHeroes([])
+        setLoadingAuctionData(true)
+
+        const auctionsData = await getAuctionData()
+        const heroIds = auctionsData.saleAuctions.map(auction => auction.tokenId.numberId)
+
+        getHeroesChain([searchCriteria.heroId, ...heroIds])
+            .then(data => {
+                // 1st hero is the main hero, no need to analyze them
+                const _mainHero = data[0]
+
+                // Analyze each of the heroes in auction
+                for (let i = 1; i < data.length; i++) {
+                    const heroToAnalyze = data[i]
+                    heroToAnalyze.targetProbability = canHeroesSummonClass(_mainHero, heroToAnalyze, searchCriteria.summonClass)
+                }
+
+                // Remove any heroes who cannot be used to summon the target class
+                // Order by highest to lowest probability of summoning target class
+                const heroes = data
+                    .filter(hero => hero.targetProbability)
+                    .sort((a, b) => a.targetProbability.value > b.targetProbability.value ? -1 : a.targetProbability.value < b.targetProbability.value ? 1 : 0)
+
+                // Update state to display heroes
+                setMainHero(_mainHero)
+                setMatchingHeroes(heroes.slice(1))
+                setLoadingAuctionData(false)
+                setLoaded(true)
             })
     }
 
     return (
         <>
             <SummonsMatchSearchForm onHeroChange={handleHeroChange} onSubmit={handleSubmit} />
-            <SummonsMatchList rows={rows} />
+            <div className='hero-list'>
+                {mainHero && <div className='main-hero'><HeroSnapshot hero={mainHero} title='Main Hero' /></div>}
+                <SummonsMatchList loaded={loaded} loading={loadingAuctionData} heroes={matchingHeroes} />
+            </div>
         </>
     )
 }

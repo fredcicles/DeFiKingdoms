@@ -1,14 +1,14 @@
 import React from 'react'
 
 const HeroStat = ({ name, value, main, minor }) => {
-    const nameClasses = `Name${main ? ' Main' : minor ? ' Minor' : ''}`
+    const nameClasses = `name${main && minor ? ' main-minor' : main ? ' main' : minor ? ' minor' : ''}`
 
     return (
-        <div className='HeroStat'>
+        <div className='hero-stat'>
             <div className={nameClasses}>
                 {name}
             </div>
-            <div className='Value'>
+            <div className='value'>
                 {value}
             </div>
         </div>

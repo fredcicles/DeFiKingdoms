@@ -22,6 +22,13 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
     }
 
 
+    const handleHeroIdBlur = (event) => {
+        const target = event.target
+        console.log('Selected Hero Id blur')
+        onHeroChange && onHeroChange(target.value)
+    }
+
+
     // Saves changes to the select Summon Class
     const handleSummonClassChange = ({ target }) => {
         console.log('Selected Summon Class changed')
@@ -31,7 +38,6 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
 
     // Submits the form to the calling component
     const handleSubmit = event => {
-        console.log('Search button clicked')
         const searchCriteria = { heroId, summonClass }
         onSubmit && onSubmit(searchCriteria)
     }
@@ -54,6 +60,7 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
                     value={heroId}
                     variant='standard'
                     onChange={handleHeroIdChange}
+                    onBlur={handleHeroIdBlur}
                 />
             </div>
             to summon a
