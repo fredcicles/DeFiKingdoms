@@ -32,7 +32,7 @@ const HeroSnapshotGenes = ({ className, genes, heroid, title, type }) => {
 HeroSnapshotGenes.propTypes = {
     className: PropTypes.string,
     genes: PropTypes.array,
-    heroid: PropTypes.string | PropTypes.number,
+    heroid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     title: PropTypes.string,
     type: PropTypes.number
 }

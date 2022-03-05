@@ -4,10 +4,28 @@
     margin: 10px;
 }
 
-.hero-id-selecter, .summoned-class-selecter {
+.auction-type-selecter,
+.hero-id-selecter, 
+.summoned-class-selecter { 
     margin: 0 10px;
     width: 100px;
     margin-bottom: -6px;
+}
+
+.auction-type-selecter>div,
+.hero-id-selecter input,
+.summoned-class-selecter>div {
+    color: blue;
+}
+
+.auction-type-selecter {
+    width: 100px;
+}
+
+.auction-type-selecter>div {
+    font-size: calc(10px + 2vmin);
+    padding-bottom: 0;
+    margin-bottom: -8px;
 }
 
 .hero-id-selecter label {

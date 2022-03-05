@@ -1,15 +1,13 @@
 {
   "name": "hero-analyzer",
   "version": "0.1.0",
+  "homepage": "https://dfk.ketl.com",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.3.1",
     "@mui/material": "^5.3.1",
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
-    "@testing-library/user-event": "^13.5.0",
     "@thanpolas/dfk-hero": "^0.1.1",
     "@types/jest": "^27.4.0",
     "@types/node": "^17.0.15",
@@ -23,6 +21,9 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "eslint-plugin-import": "^2.25.4",
     "prettier": "2.5.1",
     "react-error-overlay": "6.0.9"
