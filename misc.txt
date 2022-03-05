@@ -1,1 +1,0 @@
-    "@thanpolas/dfk-hero": "^0.1.0",
