@@ -106,7 +106,7 @@ export const calculateSummoningGeneProbability = (hero1GeneNames, hero2GeneNames
     return condenseAndSortGenesByHighestProbability(ranks)
 }
 
-export const canHeroesSummonClass = (hero1, hero2, targetClass) => {
+export const getProbabilityThatHeroesCanSummonTargetClass = (hero1, hero2, targetClass) => {
     const classProbabilities = calculateSummoningGeneProbability(hero1.mainClassGenes, hero2.mainClassGenes)
     return classProbabilities.find(_class => _class.name === targetClass)
 }

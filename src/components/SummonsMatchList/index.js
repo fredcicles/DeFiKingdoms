@@ -3,17 +3,16 @@ import React from 'react'
 import HeroSnapshot from '../HeroSnapshot'
 
 // Displays a list of Heroes who are compatible with the Summons Match
-const SummonsMatchList = ({ loaded, heroes }) => {
+const SummonsMatchList = ({ heroes }) => {
     const renderTitle = (hero) => `${(hero.targetProbability.value * 100).toFixed(2)}% probability`
     return (
         <>
-            {loaded && heroes.map(hero => <HeroSnapshot key={hero.id} hero={hero} title={renderTitle(hero)} />)}
+            {heroes.map(hero => <HeroSnapshot key={hero.id} hero={hero} title={renderTitle(hero)} />)}
         </>
     )
 }
 
 SummonsMatchList.propTypes = {
-    loaded: PropTypes.bool,
     heroes: PropTypes.array
 }
 
