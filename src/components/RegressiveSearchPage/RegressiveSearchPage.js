@@ -119,6 +119,8 @@ const RegressiveSearchPage = () => {
                 const bPrice = Number(b.price)
                 return aPrice > bPrice ? 1 : aPrice < bPrice ? -1 : 0
             }
+
+            return 0
         })
 
     return (
