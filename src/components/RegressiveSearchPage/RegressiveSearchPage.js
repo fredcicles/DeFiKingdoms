@@ -1,39 +1,42 @@
 import React, { useState } from 'react'
-import getAuctionData from '../../services/auction.service'
 import { getHeroesChain } from '@thanpolas/dfk-hero'
-import { getProbabilityThatHeroesCanSummonTargetClass } from '../../helpers/genes.helpers'
+import { getHeroDataByAuction } from '../../services/auction.service'
+import { getProbabilityThatHeroesCanSummonTargetClass, getPossibleSummonClasses } from '../../helpers/genes.helpers'
 import SummonsMatchSearchForm from '../SummonsMatchSearchForm'
 import SummonsMatchList from '../SummonsMatchList'
 import HeroSnapshot from '../HeroSnapshot'
 import './styles.css'
 
+import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
+
 const statusMessages = [
-    'Heading on over to the tavern.',
-    'Oh, they have Perch Porter on draft.',
+    'Now there is an interesting fellow.',
+    'Oh, the Tavern has Perch Porter on draft.',
     'Chatting with Agent Selina.  She is such a sweetheart!',
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'k',
-    'l',
-    'm'
+    'Are those wings on her back, or she just harpy to see me?',
+    'Woah, big guy!  Careful with those horns!'
 ]
 
+const MainHero = ({ hero }) => {
+    return hero ?
+        (<div className='main-hero'>
+            <HeroSnapshot hero={hero} title='Main Hero' />
+        </div>) :
+        null
+}
+
+const LoadingMessage = ({ heroCount, loaded, loading, message }) => {
+    const textToDisplay = loading ? message : loaded && !heroCount ? 'No Heroes Found' : null
+    return <div className='loading-message'>{textToDisplay}</div>
+}
+
 const RegressiveSearchPage = () => {
-    const [loaded, setLoaded] = useState(false)
-    const [loadingAuctionData, setLoadingAuctionData] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [hasLoaded, setHasLoaded] = useState(false)
     const [loadingMessage, setLoadingMessage] = useState('')
-    const [take] = useState(50)
 
     const [mainHero, setMainHero] = useState()
-    const [matchingHeroes, setMatchingHeroes] = useState([])
+    const [heroes, setHeroes] = useState([])
 
     // Looks up the selected Hero
     const handleHeroChange = async heroId => {
@@ -44,56 +47,73 @@ const RegressiveSearchPage = () => {
         }
     }
 
-    // Creates a new search for the specified search criteria
-    const handleSubmit = async searchCriteria => {
-        setMatchingHeroes([])
-        setLoadingAuctionData(true)
-        setLoadingMessage(statusMessages[0])
-
-        const auctionsData = await getAuctionData(searchCriteria.auctionType, take)
-        const heroIds = auctionsData.auctions.map(auction => auction.tokenId.numberId)
-
-        const iterationsBetweenStatusUpdates = 10
-        let nextStatusUpdate = iterationsBetweenStatusUpdates
-        let messageIndex = 0
-
-        const data = await getHeroesChain(heroIds)
-
-        // Analyze each of the heroes in auction
-        for (let i = 1; i < data.length; i++) {
-            const heroToAnalyze = data[i]
-            heroToAnalyze.targetProbability = getProbabilityThatHeroesCanSummonTargetClass(mainHero, heroToAnalyze, searchCriteria.summonClass)
-
-            if (i > nextStatusUpdate) {
-                setLoadingMessage(statusMessages[messageIndex++])
-                nextStatusUpdate += iterationsBetweenStatusUpdates
-                if (messageIndex >= statusMessages.length) { messageIndex = 0 }
-            }
-        }
-
-        // Remove any heroes who cannot be used to summon the target class
-        const heroes = data.filter(hero => hero.targetProbability)
-
-        // Update state to display heroes
-        setMatchingHeroes(heroes)
-        setLoadingAuctionData(false)
-        setLoaded(true)
+    const setRandomLoadingMessage = () => {
+        const randomIndex = Math.floor(Math.random() * statusMessages.length)
+        setLoadingMessage(statusMessages[randomIndex])
     }
 
-    // Order by highest to lowest probability of summoning target class
-    const heroes = matchingHeroes.sort((a, b) => a.targetProbability.value > b.targetProbability.value ? -1 : a.targetProbability.value < b.targetProbability.value ? 1 : 0)
+    const delay = ms => new Promise(res => setTimeout(res, ms))
+
+    // Creates a new search for the specified search criteria
+    const handleSubmit = async searchCriteria => {
+        setHeroes([])
+        setIsLoading(true)
+        setRandomLoadingMessage()
+
+        let allHeroes = []
+        const pageSize = 50
+        let offset = 0
+        let isLastPage = false
+
+        while (!isLastPage) {
+            // Retrieve a page of hero listings from tavern
+            const classes = getPossibleSummonClasses(mainHero.mainClass, searchCriteria.summonClass)
+            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, classes, pageSize, offset)
+            const listedHeroes = decodeRecessiveGenesAndNormalize(pageOfListings.heroes)
+
+            // Analyze each of the heroes in auction
+            for (let i = 0; i < listedHeroes.length; i++) {
+                const heroToAnalyze = listedHeroes[i]
+                heroToAnalyze.targetProbability = getProbabilityThatHeroesCanSummonTargetClass(mainHero, heroToAnalyze, searchCriteria.summonClass)
+            }
+
+            // Remove any heroes who cannot be used to summon the target class
+            const filteredHeroes = listedHeroes.filter(hero => hero.targetProbability)
+
+            console.log(`${allHeroes.length} existing heroes`)
+            console.log(`adding ${filteredHeroes.length} new heroes`)
+
+            // Merge and sort heroes by highest to lowest probability of summoning target class
+            allHeroes = allHeroes
+                .concat(filteredHeroes)
+                .sort((a, b) => a.targetProbability.value > b.targetProbability.value ? -1 : a.targetProbability.value < b.targetProbability.value ? 1 : 0)
+
+            console.log(`now ${allHeroes.length} total heroes`)
+
+            // Update state to display heroes
+            setHeroes(allHeroes)
+            setRandomLoadingMessage()
+
+            offset += pageSize
+            isLastPage = pageOfListings.length === 0
+
+            await delay(1000)
+
+            // ONLY LOAD 1 PAGE FOR TESTING
+            isLastPage = offset > 200
+        }
+
+        setIsLoading(false)
+        setHasLoaded(true)
+    }
 
     return (
         <>
             <SummonsMatchSearchForm onHeroChange={handleHeroChange} onSubmit={handleSubmit} />
+            <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>
-                {mainHero && <div className='main-hero'><HeroSnapshot hero={mainHero} title='Main Hero' /></div>}
-                {loaded && !loadingAuctionData &&
-                    <SummonsMatchList loaded={loaded} heroes={heroes} />
-                }
-                {loaded && !loadingAuctionData && !heroes.length && 'No Heroes Found'}
-                {loadingAuctionData && <div>{loadingMessage}</div>}
-
+                <MainHero hero={mainHero} />
+                <SummonsMatchList heroes={heroes} />
             </div>
         </>
     )

@@ -2,17 +2,12 @@
  * @fileoverview Hero Classes and tiers.
  */
 
- exports.basicClasses = [
-    'warrior',
-    'knight',
-    'thief',
-    'archer',
-    'priest',
-    'wizard',
-    'monk',
-    'pirate',
-  ];
-  exports.advancedClasses = ['paladin', 'darkKnight', 'summoner', 'ninja'];
-  exports.eliteClasses = ['dragoon', 'sage'];
-  exports.exaltedClasses = ['dreadKnight'];
-  
+export const classMutationPairings = [
+  { 'classes': ['warrior', 'knight'], mutation: 'paladin' },
+  { 'classes': ['thief', 'archer'], mutation: 'darkKnight' },
+  { 'classes': ['priest', 'wizard'], mutation: 'summoner' },
+  { 'classes': ['monk', 'pirate'], mutation: 'ninja' },
+  { 'classes': ['paladin', 'darkKnight'], mutation: 'dragoon' },
+  { 'classes': ['summoner', 'ninja'], mutation: 'sage' },
+  { 'classes': ['dragoon', 'sage'], mutation: 'dreadKnight' }
+]

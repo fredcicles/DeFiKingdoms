@@ -1,20 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { CLASS_REV, Rarity } from '@thanpolas/dfk-hero/src/constants/constants.const'
+import { Rarity } from '@thanpolas/dfk-hero/src/constants/constants.const'
+import { ToPrice } from '../../helpers/format.helpers'
 import HeroStatSection from '../HeroCard/HeroStatSection'
 import HeroSnapshotGenes from './HeroSnapshotGenes'
 import HeroStat from '../HeroCard/HeroStat'
-
 import './styles.css'
 
 const rarityClass = ['common', 'uncommon', 'rare', 'legendary', 'mythic']
 
 const HeroSnapshot = ({ hero, title }) => {
     return <div className={`hero-snapshot ${rarityClass[hero.rarity]}`}>
-        <div className='hero-snapshot-title'>{title}</div>
-        <div className='hero-snapshot-name'>{hero.name ? hero.name : 'Main Hero'} (#{hero.id})</div>
-        <div className='hero-snapshot-grc'>Gen{hero.generation} | {Rarity[hero.rarity]} | {CLASS_REV[hero.mainClass]}/{CLASS_REV[hero.subClass]}</div>
-        <div className='hero-snapshot-owner'>Owned by: {hero.ownerName}</div>
+        <div className='hero-snapshot-title'>
+            {title}
+        </div>
+        <div className='hero-snapshot-name'>
+            {hero.name ? hero.name : 'Main Hero'} (#{hero.id}) {hero.price ? `- J ${ToPrice(hero.price)}` : ''}
+        </div>
+        <div className='hero-snapshot-grc'>
+            Gen{hero.generation} | {Rarity[hero.rarity]} | {hero.mainClass}/{hero.subClass}
+        </div>
+        <div className='hero-snapshot-owner'>
+            Owned by: {hero.owner ? hero.owner.name : hero.ownerName}
+        </div>
         <div className='hero-snapshot-genes-section'>
             <HeroSnapshotGenes genes={hero.mainClassGenes} heroid={hero.id} title='Class' />
             <HeroSnapshotGenes genes={hero.subClassGenes} heroid={hero.id} title='SubClass' />

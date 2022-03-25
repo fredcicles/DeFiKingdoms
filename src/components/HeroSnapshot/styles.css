@@ -7,32 +7,32 @@
     padding: 10px 10px;
     background-color: black;
     color: white;
-    font-size: 0.45em;
+    font-size: 0.9em;
 }
 
 .common {
-    background-color: gray;
-    background-image: url("../../images/cards/commonCardBackground.3ddb1a56.png")
+    background-color: #93979D;
+    /* background-image: url("../../images/cards/commonCardBackground.3ddb1a56.png") */
 }
 
 .uncommon {
-    background-color: green;
-    background-image: url("../../images/cards/uncommonCardBackground.29676ab8.png")
+    background-color: #72C283;
+    /* background-image: url("../../images/cards/uncommonCardBackground.29676ab8.png") */
 }
 
 .rare {
-    background-color: skyblue;
-    background-image: url("../../images/cards/rareCardBackground.e75dff9e.png")
+    background-color: #64AFAE;
+    /* background-image: url("../../images/cards/rareCardBackground.e75dff9e.png") */
 }
 
 .legendary {
-    background-color: orangered;
-    background-image: url("../../images/cards/legendaryCardBackground.58381f20.png")
+    background-color: #D36B20;
+    /* background-image: url("../../images/cards/legendaryCardBackground.58381f20.png") */
 }
 
 .mythic {
-    background-color: indigo;
-    background-image: url("../../images/cards/mythicCardBackground.e2cdd083.png")
+    background-color: #B56FD3;
+    /* background-image: url("../../images/cards/mythicCardBackground.e2cdd083.png") */
 }
 
 .hero-snapshot-title {

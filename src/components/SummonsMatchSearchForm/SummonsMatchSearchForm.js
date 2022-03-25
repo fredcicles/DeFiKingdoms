@@ -20,19 +20,19 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
         // Renders the list of options for the Summon Class dropdown
         const basic = basicClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const advanced = advancedClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const elite = eliteClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const exalted = exaltedClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const options = [
             (<ListSubheader key='basic'>Basic Classes</ListSubheader>),
@@ -97,10 +97,10 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
             >
                 {auctionTypeOptions}
             </Select>
-            who could match with hero
+            who could match with hero #
             <div className='hero-id-selecter'>
                 <TextField
-                    label='Hero ID'
+                    placeholder='hero id'
                     name='hero-id'
                     value={heroId}
                     variant='standard'

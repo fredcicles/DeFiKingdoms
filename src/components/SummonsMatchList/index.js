@@ -5,11 +5,9 @@ import HeroSnapshot from '../HeroSnapshot'
 // Displays a list of Heroes who are compatible with the Summons Match
 const SummonsMatchList = ({ heroes }) => {
     const renderTitle = (hero) => `${(hero.targetProbability.value * 100).toFixed(2)}% probability`
-    return (
-        <>
-            {heroes.map(hero => <HeroSnapshot key={hero.id} hero={hero} title={renderTitle(hero)} />)}
-        </>
-    )
+    return heroes.length ?
+        heroes.map(hero => <HeroSnapshot key={hero.id} hero={hero} title={renderTitle(hero)} />) :
+        null
 }
 
 SummonsMatchList.propTypes = {

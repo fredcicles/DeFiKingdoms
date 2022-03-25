@@ -6,8 +6,10 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <RegressiveSearchPage />
       </header>
+      <main className="App-main">
+        <RegressiveSearchPage />
+      </main>
     </div >
   )
 }

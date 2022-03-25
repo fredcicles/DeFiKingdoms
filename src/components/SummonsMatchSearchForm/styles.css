@@ -1,51 +1,41 @@
 .SummonsMatchSearchForm {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     margin: 10px;
 }
 
 .auction-type-selecter,
 .hero-id-selecter, 
 .summoned-class-selecter { 
-    margin: 0 10px;
-    width: 100px;
-    margin-bottom: -6px;
+    margin: 0 5px;
+    margin-bottom: 1px;
 }
 
 .auction-type-selecter>div,
 .hero-id-selecter input,
 .summoned-class-selecter>div {
-    color: blue;
+    color: blue !important;
 }
 
-.auction-type-selecter {
-    width: 100px;
-}
-
+.summoned-class-selecter>div,
 .auction-type-selecter>div {
-    font-size: calc(10px + 2vmin);
     padding-bottom: 0;
-    margin-bottom: -8px;
-}
-
-.hero-id-selecter label {
     text-align: center;
-    width: 100%;
-    transform-origin: center;
 }
 
 .hero-id-selecter input {
-    font-size: calc(10px + 2vmin);
     text-align: center;
     padding-bottom: 1px;
 }
 
-.summoned-class-selecter {
-    width: 200px;
+.auction-type-selecter {
+    width: 80px;
 }
 
-.summoned-class-selecter>div {
-    font-size: calc(10px + 2vmin);
-    padding-bottom: 0;
-    margin-bottom: -8px;
+.hero-id-selecter {
+    width: 70px;
+}
+
+.summoned-class-selecter {
+    width: 125px;
 }

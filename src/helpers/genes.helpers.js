@@ -1,4 +1,6 @@
 import { getHeroTier } from '@thanpolas/dfk-hero/src/heroes-helpers/summon-utils.ent'
+import { classMutationPairings } from '../constants/hero-classes.const'
+import { CamelToPascal } from '../helpers/format.helpers'
 
 const dominantGeneProbabilities = [0.75, 0.1875, 0.046875, 0.015625]
 
@@ -8,16 +10,6 @@ const mutationProbabilities = {
     'elite': 0.125,
     'exalted': 0.125
 }
-
-const mutationPairings = [
-    { 'classes': ['warrior', 'knight'], mutation: 'paladin' },
-    { 'classes': ['thief', 'archer'], mutation: 'darkKnight' },
-    { 'classes': ['priest', 'wizard'], mutation: 'summoner' },
-    { 'classes': ['monk', 'pirate'], mutation: 'ninja' },
-    { 'classes': ['paladin', 'darkKnight'], mutation: 'dragoon' },
-    { 'classes': ['summoner', 'ninja'], mutation: 'sage' },
-    { 'classes': ['dragoon', 'sage'], mutation: 'dreadKnight' }
-]
 
 const getPotentialDominantGenes = heroGenes => {
     return heroGenes.map((name, i) => ({ name, value: dominantGeneProbabilities[i] }))
@@ -72,7 +64,7 @@ const getMutationProbability = (hero1DominantGene, hero2DominantGene) => {
     return null
 }
 
-const lookupMutation = (gene1, gene2) => mutationPairings.find(pair => gene1 !== gene2 && pair.classes.includes(gene1) && pair.classes.includes(gene2))
+const lookupMutation = (gene1, gene2) => classMutationPairings.find(pair => gene1 !== gene2 && pair.classes.includes(gene1) && pair.classes.includes(gene2))
 
 // Divide the probability value for each gene in half
 const halveGenes = genes => genes.forEach(gene => gene.value = gene.value / 2)
@@ -108,5 +100,25 @@ export const calculateSummoningGeneProbability = (hero1GeneNames, hero2GeneNames
 
 export const getProbabilityThatHeroesCanSummonTargetClass = (hero1, hero2, targetClass) => {
     const classProbabilities = calculateSummoningGeneProbability(hero1.mainClassGenes, hero2.mainClassGenes)
-    return classProbabilities.find(_class => _class.name === targetClass)
+    return classProbabilities.find(_class => _class.name === targetClass.toLowerCase())
+}
+
+export const getPossibleSummonClasses = (parentClass, summonedClass) => {
+    const classes = [summonedClass]
+
+    // If the parent and the child are the same class, 2nd parent should be same as 1st parent for highest probability
+    if (parentClass.toLowerCase() === summonedClass.toLowerCase()) return classes
+
+    // If the parentClass could mutate to the summonedClass, add the complimentary parent class
+    const mutationPairing = classMutationPairings.find(pair => pair.mutation.toLowerCase() === summonedClass.toLowerCase())
+
+    if (mutationPairing) {
+        const parentIsMutatable = mutationPairing.classes.find(c => c === parentClass)
+        let assistingClass = mutationPairing.classes.find(c => c !== parentClass)
+
+        if (parentIsMutatable)
+            classes.push(CamelToPascal(assistingClass))        
+    }    
+
+    return classes
 }
