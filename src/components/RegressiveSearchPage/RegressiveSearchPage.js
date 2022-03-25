@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
+import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
 import { getHeroesChain } from '@thanpolas/dfk-hero'
 import { getHeroDataByAuction } from '../../services/auction.service'
 import { getProbabilityThatHeroesCanSummonTargetClass, getPossibleSummonClasses } from '../../helpers/genes.helpers'
-import SummonsMatchSearchForm from '../SummonsMatchSearchForm'
-import SummonsMatchList from '../SummonsMatchList'
 import HeroSnapshot from '../HeroSnapshot'
+import SortFilter from '../SortFilter/SortFilter'
+import SummonsMatchList from '../SummonsMatchList'
+import SummonsMatchSearchForm from '../SummonsMatchSearchForm'
 import './styles.css'
-
-import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
 
 const statusMessages = [
     'Now there is an interesting fellow.',
@@ -34,9 +34,16 @@ const RegressiveSearchPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [hasLoaded, setHasLoaded] = useState(false)
     const [loadingMessage, setLoadingMessage] = useState('')
-
+    const [sortBy, setSortBy] = useState('probability')
     const [mainHero, setMainHero] = useState()
     const [heroes, setHeroes] = useState([])
+
+    const delay = ms => new Promise(res => setTimeout(res, ms))
+
+    const setRandomLoadingMessage = () => {
+        const randomIndex = Math.floor(Math.random() * statusMessages.length)
+        setLoadingMessage(statusMessages[randomIndex])
+    }
 
     // Looks up the selected Hero
     const handleHeroChange = async heroId => {
@@ -47,12 +54,9 @@ const RegressiveSearchPage = () => {
         }
     }
 
-    const setRandomLoadingMessage = () => {
-        const randomIndex = Math.floor(Math.random() * statusMessages.length)
-        setLoadingMessage(statusMessages[randomIndex])
+    const handleSortByChange = value => {
+        setSortBy(value)
     }
-
-    const delay = ms => new Promise(res => setTimeout(res, ms))
 
     // Creates a new search for the specified search criteria
     const handleSubmit = async searchCriteria => {
@@ -107,13 +111,24 @@ const RegressiveSearchPage = () => {
         setHasLoaded(true)
     }
 
+    // Heroes are sorted by Probability by default, only sort here if a different sorting is requested
+    const sortedHeroes = sortBy === 'probability' ? heroes :
+        heroes.sort((a, b) => {
+            if (sortBy === 'price') {
+                const aPrice = Number(a.price)
+                const bPrice = Number(b.price)
+                return aPrice > bPrice ? 1 : aPrice < bPrice ? -1 : 0
+            }
+        })
+
     return (
         <>
             <SummonsMatchSearchForm onHeroChange={handleHeroChange} onSubmit={handleSubmit} />
+            <SortFilter onSortByChange={handleSortByChange} visible={heroes.length > 0} />
             <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>
                 <MainHero hero={mainHero} />
-                <SummonsMatchList heroes={heroes} />
+                <SummonsMatchList heroes={sortedHeroes} />
             </div>
         </>
     )

@@ -1,0 +1,8 @@
+.sort-filter .section {
+    display: flex;
+    align-items: baseline;
+}
+
+.sort-filter .sort-label {
+    margin: 0 10px;
+}

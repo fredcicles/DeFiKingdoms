@@ -81,7 +81,7 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
 
     const auctionTypeOptions = [
         <MenuItem key='sale' value='sale'>sale</MenuItem>,
-        <MenuItem key='rent' value='rent'>rent</MenuItem>
+        <MenuItem key='rent' value='assisting'>rent</MenuItem>
     ]
 
     return (
