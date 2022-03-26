@@ -35,6 +35,7 @@ const RegressiveSearchPage = () => {
     const [hasLoaded, setHasLoaded] = useState(false)
     const [loadingMessage, setLoadingMessage] = useState('')
     const [sortBy, setSortBy] = useState('probability')
+    const [filters, setFilters] = useState({})
     const [mainHero, setMainHero] = useState()
     const [heroes, setHeroes] = useState([])
 
@@ -43,6 +44,11 @@ const RegressiveSearchPage = () => {
     const setRandomLoadingMessage = () => {
         const randomIndex = Math.floor(Math.random() * statusMessages.length)
         setLoadingMessage(statusMessages[randomIndex])
+    }
+
+    // Updates filters
+    const handleFiltersChange = filters => {
+        setFilters(filters)
     }
 
     // Looks up the selected Hero
@@ -54,6 +60,7 @@ const RegressiveSearchPage = () => {
         }
     }
 
+    // Updates sorting options
     const handleSortByChange = value => {
         setSortBy(value)
     }
@@ -112,7 +119,7 @@ const RegressiveSearchPage = () => {
     }
 
     // Heroes are sorted by Probability by default, only sort here if a different sorting is requested
-    const sortedHeroes = sortBy === 'probability' ? heroes :
+    let sortedHeroes = sortBy === 'probability' ? heroes :
         heroes.sort((a, b) => {
             if (sortBy === 'price') {
                 const aPrice = Number(a.price)
@@ -123,10 +130,18 @@ const RegressiveSearchPage = () => {
             return 0
         })
 
+    if (filters.summonsRemaining || filters.maxSummons) {
+        sortedHeroes = sortedHeroes.filter(hero => {
+            const remaining = !filters.summonsRemaining || Number(hero.summonsRemaining) >= Number(filters.summonsRemaining)
+            const max = !filters.maxSummons || Number(hero.maxSummons) >= Number(filters.maxSummons)
+            return max && remaining
+        })
+    }
+
     return (
         <>
             <SummonsMatchSearchForm onHeroChange={handleHeroChange} onSubmit={handleSubmit} />
-            <SortFilter onSortByChange={handleSortByChange} visible={heroes.length > 0} />
+            <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} visible={heroes.length > 0} />
             <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>
                 <MainHero hero={mainHero} />

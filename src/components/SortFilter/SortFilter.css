@@ -1,8 +1,41 @@
+.sort-filter {
+    display: flex;
+}
+
 .sort-filter .section {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.sort-filter .sort-label,
+.sort-filter .filter-label {
+    margin: 0 10px;
+}
+
+.sort-filter .filter-selections {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.sort-filter .filter-selecters {
     display: flex;
     align-items: baseline;
 }
 
-.sort-filter .sort-label {
-    margin: 0 10px;
+.sort-filter .filter-selecter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50px;
+    margin-right: 2px;
+    margin-left: 2px;
+    font-size: 0.8em;
+}
+
+.sort-filter .filter-selecter input {
+    text-align: center;
 }

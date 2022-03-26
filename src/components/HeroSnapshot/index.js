@@ -10,18 +10,23 @@ import './styles.css'
 const rarityClass = ['common', 'uncommon', 'rare', 'legendary', 'mythic']
 
 const HeroSnapshot = ({ hero, title }) => {
+    const name = `${hero.name ? hero.name : 'Main Hero'} (#${hero.id}) ${hero.price ? `- J ${ToPrice(hero.price)}` : ''}`
+    const grc = `Gen${hero.generation} | ${Rarity[hero.rarity]} | ${hero.mainClass}/${hero.subClass}`
     return <div className={`hero-snapshot ${rarityClass[hero.rarity]}`}>
         <div className='hero-snapshot-title'>
             {title}
         </div>
         <div className='hero-snapshot-name'>
-            {hero.name ? hero.name : 'Main Hero'} (#{hero.id}) {hero.price ? `- J ${ToPrice(hero.price)}` : ''}
+            {name}
         </div>
         <div className='hero-snapshot-grc'>
-            Gen{hero.generation} | {Rarity[hero.rarity]} | {hero.mainClass}/{hero.subClass}
+            {grc}
         </div>
         <div className='hero-snapshot-owner'>
             Owned by: {hero.owner ? hero.owner.name : hero.ownerName}
+        </div>
+        <div className='hero-snapshot-summons'>
+            Summons: {hero.summonsRemaining ? hero.summonsRemaining : hero.summons}/{hero.maxSummons}
         </div>
         <div className='hero-snapshot-genes-section'>
             <HeroSnapshotGenes genes={hero.mainClassGenes} heroid={hero.id} title='Class' />

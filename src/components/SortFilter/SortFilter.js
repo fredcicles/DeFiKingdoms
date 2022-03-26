@@ -1,11 +1,31 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 import './SortFilter.css'
 
-const SortFilter = ({ onSortByChange, visible }) => {
+const SortFilter = ({ onFiltersChange, onSortByChange, visible }) => {
     const [sortBy, setSort] = useState('probability')
+    const [summonsRemaining, setSummonsRemaining] = useState('')
+    const [maxSummons, setMaxSummons] = useState('')
+
+    const handleFilterChange = ({ target }) => {
+        let _summonsRemaining = summonsRemaining
+        let _maxSummons = maxSummons
+
+        if (target.name === 'summonsRemaining') {
+            _summonsRemaining = target.value
+            setSummonsRemaining(_summonsRemaining)
+        }
+
+        if (target.name === 'maxSummons') {
+            _maxSummons = target.value
+            setMaxSummons(_maxSummons)
+        }
+
+        onFiltersChange({ summonsRemaining: _summonsRemaining, maxSummons: _maxSummons })
+    }
 
     const handleSortByChange = ({ target }) => {
         setSort(target.value)
@@ -36,16 +56,48 @@ const SortFilter = ({ onSortByChange, visible }) => {
                     </Select>
                 </div>
             </div>
+            <div className='section'>
+                <div className='filter-label'>
+                    Filters:
+                </div>
+                <div className='filter-selections'>
+                    Summons
+                    <div className='filter-selecters'>
+                        <div className='filter-selecter'>
+                            Remaining
+                            <TextField
+                                name='summonsRemaining'
+                                value={summonsRemaining}
+                                variant='standard'
+                                onChange={handleFilterChange}
+                                type='number'
+                            />
+                        </div>
+                        <div className='filter-selecter'>
+                            Max
+                            <TextField
+                                name='maxSummons'
+                                value={maxSummons}
+                                variant='standard'
+                                onChange={handleFilterChange}
+                                type='number'
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
 
 SortFilter.propTypes = {
+    onFiltersChange: PropTypes.func,
     onSortByChange: PropTypes.func,
     visible: PropTypes.bool,
 }
 
 SortFilter.defaultProps = {
+    onFiltersChange: () => { },
     onSortByChange: () => { },
     visible: false,
 }
