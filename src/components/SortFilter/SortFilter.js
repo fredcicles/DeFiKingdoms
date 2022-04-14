@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
 import './SortFilter.css'
 
-const SortFilter = ({ onFiltersChange, onSortByChange, visible }) => {
+const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible }) => {
     const [sortBy, setSort] = useState('probability')
     const [summonsRemaining, setSummonsRemaining] = useState('')
     const [maxSummons, setMaxSummons] = useState('')
@@ -27,6 +28,10 @@ const SortFilter = ({ onFiltersChange, onSortByChange, visible }) => {
         onFiltersChange({ summonsRemaining: _summonsRemaining, maxSummons: _maxSummons })
     }
 
+    const handleViewToggled = (event) => {
+        onViewToggled(event.target.checked)
+    }
+
     const handleSortByChange = ({ target }) => {
         setSort(target.value)
         onSortByChange(target.value)
@@ -38,6 +43,10 @@ const SortFilter = ({ onFiltersChange, onSortByChange, visible }) => {
 
     return (
         <div className='sort-filter'>
+            <div className='section'>
+                <Switch defaultChecked onChange={handleViewToggled} />
+                Flip Cards
+            </div>
             <div className='section'>
                 <div className='sort-label'>
                     Sort By:
@@ -93,12 +102,14 @@ const SortFilter = ({ onFiltersChange, onSortByChange, visible }) => {
 SortFilter.propTypes = {
     onFiltersChange: PropTypes.func,
     onSortByChange: PropTypes.func,
+    onViewToggled: PropTypes.func,
     visible: PropTypes.bool,
 }
 
 SortFilter.defaultProps = {
     onFiltersChange: () => { },
     onSortByChange: () => { },
+    onViewToggled: () => { },
     visible: false,
 }
 

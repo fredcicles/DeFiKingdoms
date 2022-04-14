@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/PersonSearch'
 import './styles.css'
 
-const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
+const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
     const [summonClass, setSummonClass] = useState('')
     const [auctionType, setAuctionType] = useState('sale')
     const [heroId, setHeroId] = useState('')
@@ -84,6 +84,8 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
         <MenuItem key='rent' value='assisting'>rent</MenuItem>
     ]
 
+    const canSubmit = isHeroLoaded && summonClass
+
     return (
         <div className='SummonsMatchSearchForm'>
             Find me heroes for
@@ -119,7 +121,7 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
             >
                 {summonClassOptions}
             </Select>
-            <Button variant='contained' onClick={handleSubmit}>
+            <Button variant='contained' onClick={handleSubmit} disabled={!canSubmit}>
                 <SearchIcon />
             </Button>
         </div>
@@ -127,8 +129,13 @@ const SummonsMatchSearchForm = ({ onHeroChange, onSubmit }) => {
 }
 
 SummonsMatchSearchForm.propTypes = {
+    isHeroLoaded: PropTypes.bool,
     onHeroChange: PropTypes.func,
     onSubmit: PropTypes.func
+}
+
+SummonsMatchSearchForm.defaultProps = {
+    isHeroLoaded: false
 }
 
 export default SummonsMatchSearchForm

@@ -107,6 +107,7 @@ const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], take
       statBoost2
       statsUnknown1
       statsUnknown2
+      element
   
       strength
       agility

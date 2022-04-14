@@ -17,10 +17,10 @@ const statusMessages = [
     'Woah, big guy!  Careful with those horns!'
 ]
 
-const MainHero = ({ hero }) => {
+const MainHero = ({ hero, view }) => {
     return hero ?
         (<div className='main-hero'>
-            <HeroSnapshot hero={hero} title='Main Hero' />
+            <HeroSnapshot hero={hero} title='Main Hero' view={view} />
         </div>) :
         null
 }
@@ -38,6 +38,7 @@ const RegressiveSearchPage = () => {
     const [filters, setFilters] = useState({})
     const [mainHero, setMainHero] = useState()
     const [heroes, setHeroes] = useState([])
+    const [view, setView] = useState('front')
 
     const delay = ms => new Promise(res => setTimeout(res, ms))
 
@@ -118,6 +119,11 @@ const RegressiveSearchPage = () => {
         setHasLoaded(true)
     }
 
+    // Change the current view
+    const handleViewToggled = (checked) => {
+        setView(checked ? 'front' : 'back')
+    }
+
     // Heroes are sorted by Probability by default, only sort here if a different sorting is requested
     let sortedHeroes = sortBy === 'probability' ? heroes :
         heroes.sort((a, b) => {
@@ -140,12 +146,12 @@ const RegressiveSearchPage = () => {
 
     return (
         <>
-            <SummonsMatchSearchForm onHeroChange={handleHeroChange} onSubmit={handleSubmit} />
-            <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} visible={heroes.length > 0} />
+            <SummonsMatchSearchForm isHeroLoaded={!!mainHero} onHeroChange={handleHeroChange} onSubmit={handleSubmit} />
+            <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} onViewToggled={handleViewToggled} visible={heroes.length > 0} />
             <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>
-                <MainHero hero={mainHero} />
-                <SummonsMatchList heroes={sortedHeroes} />
+                <MainHero hero={mainHero} view={view} />
+                <SummonsMatchList heroes={sortedHeroes} view={view} />
             </div>
         </>
     )
