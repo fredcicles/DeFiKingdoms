@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types';
 import { CONSTANTS } from '@thanpolas/dfk-hero'
+import { PROFESSIONS_AR as professions } from '@thanpolas/dfk-hero/src/constants/constants.const'
 import { basicClasses, advancedClasses, eliteClasses, exaltedClasses } from '@thanpolas/dfk-hero/src/constants/hero-classes.const'
 import Button from '@mui/material/Button'
 import ListSubheader from '@mui/material/ListSubheader'
@@ -10,9 +11,12 @@ import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/PersonSearch'
 import './styles.css'
 
+const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }]
+
 const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
     const [summonClass, setSummonClass] = useState('')
-    const [auctionType, setAuctionType] = useState('sale')
+    const [summonProfession, setSummonProfession] = useState('')
+    const [auctionType, setAuctionType] = useState('assisting')
     const [heroId, setHeroId] = useState('')
     const [summonClassOptions, setSummonClassOptions] = useState([])
 
@@ -66,6 +70,12 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
     }
 
 
+    // Saves changes to the select Summon Profession
+    const handleSummonProfessionChange = ({target}) => {
+        setSummonProfession(target.value)
+    }
+
+
     // Saves changes to the select Summon Class
     const handleSummonClassChange = ({ target }) => {
         setSummonClass(target.value)
@@ -74,15 +84,15 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
 
     // Submits the form to the calling component
     const handleSubmit = event => {
-        const searchCriteria = { auctionType, heroId, summonClass }
+        const searchCriteria = { auctionType, heroId, summonClass, summonProfession }
         onSubmit && onSubmit(searchCriteria)
     }
 
-
-    const auctionTypeOptions = [
-        <MenuItem key='sale' value='sale'>sale</MenuItem>,
-        <MenuItem key='rent' value='assisting'>rent</MenuItem>
-    ]
+    const options = array => array.map(item => {
+        const label = typeof(item) === 'string' ? item : item.label
+        const value = typeof(item) === 'string' ? item : item.value
+        return <MenuItem key={value} value={value}>{label}</MenuItem>
+    })
 
     const canSubmit = isHeroLoaded && summonClass
 
@@ -97,7 +107,7 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
                 variant='standard'
                 onChange={handleAuctionTypeChange}
             >
-                {auctionTypeOptions}
+                {options(auctionTypes)}
             </Select>
             who could match with hero #
             <div className='hero-id-selecter'>
@@ -111,6 +121,16 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
                 />
             </div>
             to summon a
+            <Select
+                label='Profession to be summoned'
+                name='summoned-profession'
+                className='summoned-profession-selecter'
+                value={summonProfession}
+                variant='standard'
+                onChange={handleSummonProfessionChange}
+            >
+                {options(professions)}
+            </Select>
             <Select
                 label='Class to be summoned'
                 name='summoned-class'

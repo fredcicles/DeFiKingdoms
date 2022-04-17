@@ -47,7 +47,7 @@ const getAuctionData = async (type = 'sale', take = 50, skip = 0) => {
 /*
  * auctionType: sale | assisting
  */
-const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], take = 50, skip = 0) => {
+const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], profession = '', take = 50, skip = 0) => {
   console.log(`Retrieving hero listings ${skip + 1} - ${skip + take} from the Tavern`)
 
   const options = { headers: { 'Content-Type': 'application/json' } }
@@ -56,12 +56,21 @@ const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], take
   const graphQLClient = new GraphQLClient(apiv6_endpoint, options)
 
   let filter = `${auctionType}Price_not: null`
+
+  // If specified, add main class to filter
   if (mainClasses.length) {
     filter = `${filter}
     mainClass_in: [${mainClasses.map(name => `"${name}"`)}]`
   }
 
+  // If specified, add profession to filter
+  if (profession) {
+    filter = `${filter}
+    profession: "${profession}"`
+  }
+
   const price = `price: ${auctionType}Price`
+
 
   // Define our query, this will return data for the first 1000 open auctions
   // 1000 is the max query size for GQL

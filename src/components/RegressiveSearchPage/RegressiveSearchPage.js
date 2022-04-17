@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
 import { getHeroesChain } from '@thanpolas/dfk-hero'
 import { getHeroDataByAuction } from '../../services/auction.service'
-import { getProbabilityThatHeroesCanSummonTargetClass, getPossibleSummonClasses } from '../../helpers/genes.helpers'
+import { getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
 import HeroSnapshot from '../HeroSnapshot'
 import SortFilter from '../SortFilter/SortFilter'
 import SummonsMatchList from '../SummonsMatchList'
@@ -80,17 +80,24 @@ const RegressiveSearchPage = () => {
         while (!isLastPage) {
             // Retrieve a page of hero listings from tavern
             const classes = getPossibleSummonClasses(mainHero.mainClass, searchCriteria.summonClass)
-            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, classes, pageSize, offset)
+            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, classes, searchCriteria.summonProfession, pageSize, offset)
             const listedHeroes = decodeRecessiveGenesAndNormalize(pageOfListings.heroes)
 
             // Analyze each of the heroes in auction
             for (let i = 0; i < listedHeroes.length; i++) {
                 const heroToAnalyze = listedHeroes[i]
-                heroToAnalyze.targetProbability = getProbabilityThatHeroesCanSummonTargetClass(mainHero, heroToAnalyze, searchCriteria.summonClass)
+                const classProbability = getProbabilityThatHeroesCanSummonTargetGene(mainHero.mainClassGenes, heroToAnalyze.mainClassGenes, searchCriteria.summonClass)
+
+                if (searchCriteria.summonProfession) {
+                    const professionProbability = getProbabilityThatHeroesCanSummonTargetGene(mainHero.professionGenes, heroToAnalyze.professionGenes, searchCriteria.summonProfession)
+                    heroToAnalyze.targetProbability = classProbability && professionProbability ? classProbability.value * professionProbability.value : 0
+                } else {
+                    heroToAnalyze.targetProbability = classProbability.value
+                }
             }
 
             // Remove any heroes who cannot be used to summon the target class
-            const filteredHeroes = listedHeroes.filter(hero => hero.targetProbability)
+            const filteredHeroes = listedHeroes.filter(hero => hero.targetProbability > 0)
 
             console.log(`${allHeroes.length} existing heroes`)
             console.log(`adding ${filteredHeroes.length} new heroes`)
@@ -98,7 +105,7 @@ const RegressiveSearchPage = () => {
             // Merge and sort heroes by highest to lowest probability of summoning target class
             allHeroes = allHeroes
                 .concat(filteredHeroes)
-                .sort((a, b) => a.targetProbability.value > b.targetProbability.value ? -1 : a.targetProbability.value < b.targetProbability.value ? 1 : 0)
+                .sort((a, b) => a.targetProbability > b.targetProbability ? -1 : a.targetProbability < b.targetProbability ? 1 : 0)
 
             console.log(`now ${allHeroes.length} total heroes`)
 
