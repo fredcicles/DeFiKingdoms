@@ -13,9 +13,23 @@ import './styles.css'
 
 const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }]
 
+const professionAllOption = { label: 'any profession', value: 'all' }
+
+const options = (array) => {
+    return array.map(item => {
+        const label = typeof (item) === 'string' ? item : item.label
+        const value = typeof (item) === 'string' ? item : item.value
+        return <MenuItem key={value} value={value}>{label}</MenuItem>
+    })
+}
+
+const auctionTypeOptions = options(auctionTypes)
+
+const professionOptions = options([professionAllOption, ...professions])
+
 const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
     const [summonClass, setSummonClass] = useState('')
-    const [summonProfession, setSummonProfession] = useState('')
+    const [summonProfession, setSummonProfession] = useState('all')
     const [auctionType, setAuctionType] = useState('assisting')
     const [heroId, setHeroId] = useState('')
     const [summonClassOptions, setSummonClassOptions] = useState([])
@@ -71,7 +85,7 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
 
 
     // Saves changes to the select Summon Profession
-    const handleSummonProfessionChange = ({target}) => {
+    const handleSummonProfessionChange = ({ target }) => {
         setSummonProfession(target.value)
     }
 
@@ -84,15 +98,9 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
 
     // Submits the form to the calling component
     const handleSubmit = event => {
-        const searchCriteria = { auctionType, heroId, summonClass, summonProfession }
+        const searchCriteria = { auctionType, heroId, summonClass, summonProfession: summonProfession === 'all' ? '' : summonProfession }
         onSubmit && onSubmit(searchCriteria)
     }
-
-    const options = array => array.map(item => {
-        const label = typeof(item) === 'string' ? item : item.label
-        const value = typeof(item) === 'string' ? item : item.value
-        return <MenuItem key={value} value={value}>{label}</MenuItem>
-    })
 
     const canSubmit = isHeroLoaded && summonClass
 
@@ -107,7 +115,7 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
                 variant='standard'
                 onChange={handleAuctionTypeChange}
             >
-                {options(auctionTypes)}
+                {auctionTypeOptions}
             </Select>
             who could match with hero #
             <div className='hero-id-selecter'>
@@ -122,16 +130,6 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
             </div>
             to summon a
             <Select
-                label='Profession to be summoned'
-                name='summoned-profession'
-                className='summoned-profession-selecter'
-                value={summonProfession}
-                variant='standard'
-                onChange={handleSummonProfessionChange}
-            >
-                {options(professions)}
-            </Select>
-            <Select
                 label='Class to be summoned'
                 name='summoned-class'
                 className='summoned-class-selecter'
@@ -140,6 +138,17 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
                 onChange={handleSummonClassChange}
             >
                 {summonClassOptions}
+            </Select>
+            for
+            <Select
+                label='Profession to be summoned'
+                name='summoned-profession'
+                className='summoned-profession-selecter'
+                value={summonProfession}
+                variant='standard'
+                onChange={handleSummonProfessionChange}
+            >
+                {professionOptions}
             </Select>
             <Button variant='contained' onClick={handleSubmit} disabled={!canSubmit}>
                 <SearchIcon />
