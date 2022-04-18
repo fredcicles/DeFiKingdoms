@@ -92,7 +92,7 @@ const RegressiveSearchPage = () => {
                     const professionProbability = getProbabilityThatHeroesCanSummonTargetGene(mainHero.professionGenes, heroToAnalyze.professionGenes, searchCriteria.summonProfession)
                     heroToAnalyze.targetProbability = classProbability && professionProbability ? classProbability.value * professionProbability.value : 0
                 } else {
-                    heroToAnalyze.targetProbability = classProbability.value
+                    heroToAnalyze.targetProbability = classProbability ? classProbability.value : 0
                 }
             }
 
