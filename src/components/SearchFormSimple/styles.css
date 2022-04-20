@@ -1,4 +1,4 @@
-.SummonsMatchSearchForm {
+.search-form-simple {
     display: flex;
     align-items: center;
     margin: 10px;
@@ -45,4 +45,14 @@
 
 .summoned-profession-selecter {
     width: 140px;
+}
+
+.search-form-toggle {
+    text-decoration: none;
+    color: gray;
+    margin-left: 20px;
+}
+
+.search-form-toggle:hover {
+    text-decoration: underline;
 }

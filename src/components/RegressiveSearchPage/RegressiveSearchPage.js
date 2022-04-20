@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
 import { getHeroesChain } from '@thanpolas/dfk-hero'
 import { getHeroDataByAuction } from '../../services/auction.service'
-import { getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
+import { getMutationClass, getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
 import HeroSnapshot from '../HeroSnapshot'
 import SortFilter from '../SortFilter/SortFilter'
+import SearchFormSimple from '../SearchFormSimple'
 import SummonsMatchList from '../SummonsMatchList'
-import SummonsMatchSearchForm from '../SummonsMatchSearchForm'
 import './styles.css'
 
 const statusMessages = [
@@ -34,8 +34,10 @@ const RegressiveSearchPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [hasLoaded, setHasLoaded] = useState(false)
     const [loadingMessage, setLoadingMessage] = useState('')
+    const [searchForm, setSearchForm] = useState('simple')
     const [sortBy, setSortBy] = useState('probability')
     const [filters, setFilters] = useState({})
+    const [mutationClass, setMutationClass] = useState('')
     const [mainHero, setMainHero] = useState()
     const [heroes, setHeroes] = useState([])
     const [view, setView] = useState('front')
@@ -55,9 +57,13 @@ const RegressiveSearchPage = () => {
     // Looks up the selected Hero
     const handleHeroChange = async heroId => {
         if (heroId) {
+            setHeroes([])
             setMainHero()
             const data = await getHeroesChain([heroId])
             setMainHero(data[0])
+
+            // Set a default for the class to summon based on the selected hero
+            setMutationClass(getMutationClass(data[0].mainClass))
         }
     }
 
@@ -126,6 +132,11 @@ const RegressiveSearchPage = () => {
         setHasLoaded(true)
     }
 
+    // Changes which search form is displayed
+    const handleSearchFormToggle = () => {
+        setSearchForm(searchForm === 'simple' ? 'advanced' : 'simple')
+    }
+
     // Change the current view
     const handleViewToggled = (checked) => {
         setView(checked ? 'front' : 'back')
@@ -153,7 +164,7 @@ const RegressiveSearchPage = () => {
 
     return (
         <>
-            <SummonsMatchSearchForm isHeroLoaded={!!mainHero} onHeroChange={handleHeroChange} onSubmit={handleSubmit} />
+            <SearchFormSimple defaultSummonClass={mutationClass} isHeroLoaded={!!mainHero} onHeroChange={handleHeroChange} onToggle={handleSearchFormToggle} onSubmit={handleSubmit} />            
             <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} onViewToggled={handleViewToggled} visible={heroes.length > 0} />
             <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>

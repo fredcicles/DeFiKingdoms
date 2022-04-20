@@ -78,6 +78,11 @@
     display: flex;
 }
 
+.hero-snapshot-genes .gene .notBasic {
+    color: yellow;
+    /* font-weight: bold; */
+}
+
 .hero-snapshot-genes .label {
     width: 25px;
 }

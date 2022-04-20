@@ -122,3 +122,8 @@ export const getPossibleSummonClasses = (parentClass, summonedClass) => {
 
     return classes
 }
+
+// Retrieves the mutation class for the specified base class
+export const getMutationClass = heroClass => {
+    return classMutationPairings.find(pair => pair.classes.includes(heroClass)).mutation
+}

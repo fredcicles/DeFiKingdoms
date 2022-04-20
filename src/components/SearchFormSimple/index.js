@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { CONSTANTS } from '@thanpolas/dfk-hero'
 import { PROFESSIONS_AR as professions } from '@thanpolas/dfk-hero/src/constants/constants.const'
 import { basicClasses, advancedClasses, eliteClasses, exaltedClasses } from '@thanpolas/dfk-hero/src/constants/hero-classes.const'
+import { CamelToPascal } from '../../helpers/format.helpers'
 import Button from '@mui/material/Button'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
+import SearchIcon from '@mui/icons-material/PersonSearch'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
-import SearchIcon from '@mui/icons-material/PersonSearch'
 import './styles.css'
 
 const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }]
@@ -27,7 +28,7 @@ const auctionTypeOptions = options(auctionTypes)
 
 const professionOptions = options([professionAllOption, ...professions])
 
-const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
+const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSubmit, onToggle }) => {
     const [summonClass, setSummonClass] = useState('')
     const [summonProfession, setSummonProfession] = useState('all')
     const [auctionType, setAuctionType] = useState('assisting')
@@ -66,6 +67,12 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
         setSummonClassOptions(options)
     }, [])
 
+    useEffect(() => {
+        if (defaultSummonClass) {
+            setSummonClass(CamelToPascal(defaultSummonClass))
+        }
+    }, [defaultSummonClass])
+
     // Saves changes to the selected Auction Type
     const handleAuctionTypeChange = ({ target }) => {
         setAuctionType(target.value)
@@ -97,15 +104,15 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
 
 
     // Submits the form to the calling component
-    const handleSubmit = event => {
+    const handleSubmit = () => {
         const searchCriteria = { auctionType, heroId, summonClass, summonProfession: summonProfession === 'all' ? '' : summonProfession }
         onSubmit && onSubmit(searchCriteria)
     }
 
-    const canSubmit = isHeroLoaded && summonClass
+    const canSubmit = isHeroLoaded && summonClass    
 
     return (
-        <div className='SummonsMatchSearchForm'>
+        <div className='search-form-simple'>
             Find me heroes for
             <Select
                 label='Auction Type'
@@ -153,18 +160,23 @@ const SummonsMatchSearchForm = ({ isHeroLoaded, onHeroChange, onSubmit }) => {
             <Button variant='contained' onClick={handleSubmit} disabled={!canSubmit}>
                 <SearchIcon />
             </Button>
+            {/* <a href="#" className='search-form-toggle' onClick={onToggle}>Advanced Search</a> */}
         </div>
     )
 }
 
-SummonsMatchSearchForm.propTypes = {
+SearchFormSimple.propTypes = {
+    defaultSummonClass: PropTypes.string,
     isHeroLoaded: PropTypes.bool,
     onHeroChange: PropTypes.func,
-    onSubmit: PropTypes.func
+    onSubmit: PropTypes.func,
+    onToggle: PropTypes.func,
 }
 
-SummonsMatchSearchForm.defaultProps = {
-    isHeroLoaded: false
+SearchFormSimple.defaultProps = {
+    defaultSummonClass: '',
+    isHeroLoaded: false,
+    onToggle: () => { }
 }
 
-export default SummonsMatchSearchForm
+export default SearchFormSimple

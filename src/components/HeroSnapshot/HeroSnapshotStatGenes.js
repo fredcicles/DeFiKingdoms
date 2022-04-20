@@ -1,10 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const StatGene = ({ value }) => {
+const StatGene = ({ boldIfNot, value }) => {
+    let className = 'value'
+
+    if (boldIfNot && !value.toString().toLowerCase().includes(boldIfNot)) {
+         className += ' notBasic'
+    }
+
     return (
         <div className='gene'>
-            <div className='value'>{value}</div>
+            <div className={className}>{value}</div>
         </div>
     )
 }
@@ -19,13 +25,13 @@ const HeroSnapshotStatGenes = ({ className, genes }) => {
         <>
             <div className={`hero-snapshot-genes ${className}`}>
                 <div className='title'>Active</div>
-                <StatGene value={genes['active1']} />
-                <StatGene value={genes['active2']} />
+                <StatGene value={genes['active1']} boldIfNot='basic' />
+                <StatGene value={genes['active2']} boldIfNot='basic' />
             </div>
             <div className={`hero-snapshot-genes ${className}`}>
                 <div className='title'>Passive</div>
-                <StatGene value={genes['passive1']} />
-                <StatGene value={genes['passive2']} />
+                <StatGene value={genes['passive1']} boldIfNot='basic' />
+                <StatGene value={genes['passive2']} boldIfNot='basic' />
             </div>
             <div className={`hero-snapshot-genes ${className}`}>
                 <div className='title'>Unknown</div>
