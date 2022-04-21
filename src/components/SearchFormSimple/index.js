@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { CONSTANTS } from '@thanpolas/dfk-hero'
 import { PROFESSIONS_AR as professions } from '@thanpolas/dfk-hero/src/constants/constants.const'
 import { basicClasses, advancedClasses, eliteClasses, exaltedClasses } from '@thanpolas/dfk-hero/src/constants/hero-classes.const'
-import { CamelToPascal } from '../../helpers/format.helpers'
 import Button from '@mui/material/Button'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
@@ -69,7 +68,7 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
 
     useEffect(() => {
         if (defaultSummonClass) {
-            setSummonClass(CamelToPascal(defaultSummonClass))
+            setSummonClass(defaultSummonClass)
         }
     }, [defaultSummonClass])
 

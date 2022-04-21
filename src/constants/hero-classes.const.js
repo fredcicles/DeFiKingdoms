@@ -3,11 +3,11 @@
  */
 
 export const classMutationPairings = [
-  { 'classes': ['warrior', 'knight'], mutation: 'paladin' },
-  { 'classes': ['thief', 'archer'], mutation: 'darkKnight' },
-  { 'classes': ['priest', 'wizard'], mutation: 'summoner' },
-  { 'classes': ['monk', 'pirate'], mutation: 'ninja' },
-  { 'classes': ['paladin', 'darkKnight'], mutation: 'dragoon' },
-  { 'classes': ['summoner', 'ninja'], mutation: 'sage' },
-  { 'classes': ['dragoon', 'sage'], mutation: 'dreadKnight' }
+  { 'classes': ['Warrior', 'Knight'], mutation: 'Paladin' },
+  { 'classes': ['Thief', 'Archer'], mutation: 'DarkKnight' },
+  { 'classes': ['Priest', 'Wizard'], mutation: 'Summoner' },
+  { 'classes': ['Monk', 'Pirate'], mutation: 'Ninja' },
+  { 'classes': ['Paladin', 'DarkKnight'], mutation: 'Dragoon' },
+  { 'classes': ['Summoner', 'Ninja'], mutation: 'Sage' },
+  { 'classes': ['Dragoon', 'Sage'], mutation: 'DreadKnight' }
 ]

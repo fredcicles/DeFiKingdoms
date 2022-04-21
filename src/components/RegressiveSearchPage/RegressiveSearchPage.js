@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
-import { getHeroesChain } from '@thanpolas/dfk-hero'
+import { getHeroById } from '../../services/hero.service'
 import { getHeroDataByAuction } from '../../services/auction.service'
 import { getMutationClass, getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
 import HeroSnapshot from '../HeroSnapshot'
@@ -59,7 +59,8 @@ const RegressiveSearchPage = () => {
         if (heroId) {
             setHeroes([])
             setMainHero()
-            const data = await getHeroesChain([heroId])
+            let data = await getHeroById(heroId)
+            data = decodeRecessiveGenesAndNormalize(data.heroes)
             setMainHero(data[0])
 
             // Set a default for the class to summon based on the selected hero
@@ -111,7 +112,6 @@ const RegressiveSearchPage = () => {
             // Merge and sort heroes by highest to lowest probability of summoning target class
             allHeroes = allHeroes
                 .concat(filteredHeroes)
-                .sort((a, b) => a.targetProbability > b.targetProbability ? -1 : a.targetProbability < b.targetProbability ? 1 : 0)
 
             console.log(`now ${allHeroes.length} total heroes`)
 
@@ -142,9 +142,23 @@ const RegressiveSearchPage = () => {
         setView(checked ? 'front' : 'back')
     }
 
+    let sortedHeroes = heroes
+
+    // Filter based on filter criteria
+    if (filters.summonsRemaining || filters.maxSummons || filters.minGen || filters.maxGen) {
+        sortedHeroes = sortedHeroes.filter(hero => {
+            const remainingSummons = !filters.summonsRemaining || Number(hero.summonsRemaining) >= Number(filters.summonsRemaining)
+            const maxSummons = !filters.maxSummons || Number(hero.maxSummons) >= Number(filters.maxSummons)
+            const minGen = filters.minGen === '' || Number(hero.generation) >= Number(filters.minGen)
+            const maxGen = filters.maxGen === '' || Number(hero.generation) <= Number(filters.maxGen)
+            return maxSummons && remainingSummons && minGen && maxGen
+        })
+    }
+
     // Heroes are sorted by Probability by default, only sort here if a different sorting is requested
-    let sortedHeroes = sortBy === 'probability' ? heroes :
-        heroes.sort((a, b) => {
+    sortedHeroes = sortBy === 'probability' ?
+        sortedHeroes.sort((a, b) => a.targetProbability > b.targetProbability ? -1 : a.targetProbability < b.targetProbability ? 1 : 0) :
+        sortedHeroes.sort((a, b) => {
             if (sortBy === 'price') {
                 const aPrice = Number(a.price)
                 const bPrice = Number(b.price)
@@ -154,17 +168,9 @@ const RegressiveSearchPage = () => {
             return 0
         })
 
-    if (filters.summonsRemaining || filters.maxSummons) {
-        sortedHeroes = sortedHeroes.filter(hero => {
-            const remaining = !filters.summonsRemaining || Number(hero.summonsRemaining) >= Number(filters.summonsRemaining)
-            const max = !filters.maxSummons || Number(hero.maxSummons) >= Number(filters.maxSummons)
-            return max && remaining
-        })
-    }
-
     return (
         <>
-            <SearchFormSimple defaultSummonClass={mutationClass} isHeroLoaded={!!mainHero} onHeroChange={handleHeroChange} onToggle={handleSearchFormToggle} onSubmit={handleSubmit} />            
+            <SearchFormSimple defaultSummonClass={mutationClass} isHeroLoaded={!!mainHero} onHeroChange={handleHeroChange} onToggle={handleSearchFormToggle} onSubmit={handleSubmit} />
             <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} onViewToggled={handleViewToggled} visible={heroes.length > 0} />
             <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>

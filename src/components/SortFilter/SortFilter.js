@@ -10,22 +10,36 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
     const [sortBy, setSort] = useState('probability')
     const [summonsRemaining, setSummonsRemaining] = useState('')
     const [maxSummons, setMaxSummons] = useState('')
+    const [minGen, setMinGen] = useState('0')
+    const [maxGen, setMaxGen] = useState('14')
 
     const handleFilterChange = ({ target }) => {
         let _summonsRemaining = summonsRemaining
         let _maxSummons = maxSummons
+        let _minGen = minGen
+        let _maxGen = maxGen
 
         if (target.name === 'summonsRemaining') {
             _summonsRemaining = target.value
-            setSummonsRemaining(_summonsRemaining)
+            setSummonsRemaining(target.value)
         }
 
         if (target.name === 'maxSummons') {
             _maxSummons = target.value
-            setMaxSummons(_maxSummons)
+            setMaxSummons(target.value)
         }
 
-        onFiltersChange({ summonsRemaining: _summonsRemaining, maxSummons: _maxSummons })
+        if (target.name === 'minGen') {
+            _minGen = target.value
+            setMinGen(target.value)
+        }
+
+        if (target.name === 'maxGen') {
+            _maxGen = target.value
+            setMaxGen(target.value)
+        }
+
+        onFiltersChange({ summonsRemaining: _summonsRemaining, maxSummons: _maxSummons, minGen: _minGen, maxGen: _maxGen })
     }
 
     const handleViewToggled = (event) => {
@@ -87,6 +101,31 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                             <TextField
                                 name='maxSummons'
                                 value={maxSummons}
+                                variant='standard'
+                                onChange={handleFilterChange}
+                                type='number'
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className='filter-selections'>
+                    Generation
+                    <div className='filter-selecters'>
+                        <div className='filter-selecter'>
+                            Min
+                            <TextField
+                                name='minGen'
+                                value={minGen}
+                                variant='standard'
+                                onChange={handleFilterChange}
+                                type='number'
+                            />
+                        </div>
+                        <div className='filter-selecter'>
+                            Max
+                            <TextField
+                                name='maxGen'
+                                value={maxGen}
                                 variant='standard'
                                 onChange={handleFilterChange}
                                 type='number'
