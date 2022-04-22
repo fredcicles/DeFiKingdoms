@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { CalcuateSummonCost } from '../../helpers/prices.helper'
 import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
 import { getHeroById } from '../../services/hero.service'
 import { getHeroDataByAuction } from '../../services/auction.service'
 import { getMutationClass, getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
+import { ToPrice } from '../../helpers/format.helpers'
 import HeroSnapshot from '../HeroSnapshot'
 import SortFilter from '../SortFilter/SortFilter'
 import SearchFormSimple from '../SearchFormSimple'
@@ -61,6 +63,7 @@ const RegressiveSearchPage = () => {
             setMainHero()
             let data = await getHeroById(heroId)
             data = decodeRecessiveGenesAndNormalize(data.heroes)
+            data[0].summonCost = CalcuateSummonCost(data[0])
             setMainHero(data[0])
 
             // Set a default for the class to summon based on the selected hero
@@ -93,6 +96,9 @@ const RegressiveSearchPage = () => {
             // Analyze each of the heroes in auction
             for (let i = 0; i < listedHeroes.length; i++) {
                 const heroToAnalyze = listedHeroes[i]
+                heroToAnalyze.auctionType = searchCriteria.auctionType
+                heroToAnalyze.summonCost = CalcuateSummonCost(heroToAnalyze)
+                heroToAnalyze.price = ToPrice(heroToAnalyze.price)
                 const classProbability = getProbabilityThatHeroesCanSummonTargetGene(mainHero.mainClassGenes, heroToAnalyze.mainClassGenes, searchCriteria.summonClass)
 
                 if (searchCriteria.summonProfession) {
@@ -110,8 +116,7 @@ const RegressiveSearchPage = () => {
             console.log(`adding ${filteredHeroes.length} new heroes`)
 
             // Merge and sort heroes by highest to lowest probability of summoning target class
-            allHeroes = allHeroes
-                .concat(filteredHeroes)
+            allHeroes = allHeroes.concat(filteredHeroes)
 
             console.log(`now ${allHeroes.length} total heroes`)
 
@@ -160,8 +165,8 @@ const RegressiveSearchPage = () => {
         sortedHeroes.sort((a, b) => a.targetProbability > b.targetProbability ? -1 : a.targetProbability < b.targetProbability ? 1 : 0) :
         sortedHeroes.sort((a, b) => {
             if (sortBy === 'price') {
-                const aPrice = Number(a.price)
-                const bPrice = Number(b.price)
+                const aPrice = a.price + (a.auctionType === 'sale' ? 0 : a.summonCost)
+                const bPrice = b.price + (b.auctionType === 'sale' ? 0 : b.summonCost)
                 return aPrice > bPrice ? 1 : aPrice < bPrice ? -1 : 0
             }
 

@@ -45,6 +45,7 @@
 }
 
 .hero-snapshot-name {
+    text-align: center;
     font-weight: 800;
     font-size: 1.1em;
     margin-bottom: 7px;
@@ -52,15 +53,50 @@
 
 /* grc - Generation, Rarity, Classes */
 .hero-snapshot-grc {
-    font-weight: 800;
-    margin-top: 7px;
-    margin-bottom: 2px;
-    font-size: 0.85em;
+    font-weight: 600;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    text-align: center;
 }
 
 .hero-snapshot-owner {
-    margin-top: 2px;
-    margin-bottom: 7px;
+    text-align: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.hero-snapshot-summons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.hero-snapshot-pricing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.price-group {
+    margin: 10px;
+    text-align: center;
+}
+
+.price-group .price-label {
+    font-size: 0.8em;
+}
+
+.price-group .price-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05em;
+}
+
+.jewel-icon {
+    width: 12px;
+    height: 12px;
+    margin: 0 0 0 5px;
 }
 
 .hero-snapshot-genes-section {
@@ -76,6 +112,7 @@
 
 .hero-snapshot-genes .gene {
     display: flex;
+    margin-top: 2px;
 }
 
 .hero-snapshot-genes .gene .notBasic {
