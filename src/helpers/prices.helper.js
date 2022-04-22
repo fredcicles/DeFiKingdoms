@@ -12,11 +12,13 @@ const SummonsCosts = [
     { generation: 10, baseCost: 106, increment: 2, maxCost: 106 }
 ]
 
-export const CalcuateSummonCost = ({ generation, summonsRemaining, maxSummons }) => {
-    const gen = Number(generation)
-    if (gen < 0 || gen > 10) return '?'
+export const CalcuateSummonCost = ({ generation, summons, maxSummons }) => {
+    if (generation < 0 || generation > 10) return '?'
     
-    const tier = SummonsCosts[gen]
-    const cost = tier.baseCost + (maxSummons - summonsRemaining + 1) * tier.increment
-    return cost
+    const tier = SummonsCosts[generation]
+
+    // Gen0s have price cap
+    if (summons >= maxSummons) return tier.maxCost
+
+    return tier.baseCost + (summons * tier.increment)
 }

@@ -43,8 +43,8 @@ const HeroSnapshot = ({ hero, title, view }) => {
             <div className='hero-snapshot-pricing'>
                 {hero.price && (<PriceGroup label={<>{`${hero.auctionType === 'sale' ? 'Purchase' : 'Rental'}`}<br />Price</>} value={hero.price} showJewel />)}
                 <PriceGroup label={<>Summon<br />Cost</>} value={hero.summonCost} showJewel />
-                {hero.auctionType === 'assisting' && <PriceGroup label={<>Total<br />Cost</>} value={hero.price + hero.summonCost} showJewel />}
-                <PriceGroup label={<>Summons<br/>Remaining</>} value={`${hero.summonsRemaining}/${hero.maxSummons}`} />
+                {hero.auctionType === 'assisting' && <PriceGroup label={<>Total<br />Cost</>} value={Number(hero.price) + Number(hero.summonCost)} showJewel />}
+                <PriceGroup label={hero.generation === 0 ? <>Total<br/>Summons</> : <>Summons<br/>Remaining</>} value={`${hero.maxSummons === 11 ? hero.summons : hero.summonsRemaining}/${hero.maxSummons === 11 ? '∞' : hero.maxSummons}`} />
             </div>
             <div className='hero-snapshot-owner'>
                 Owned by: {hero.owner ? hero.owner.name : 'UNAVAILABLE'}
