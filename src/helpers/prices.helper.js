@@ -12,7 +12,7 @@ const SummonsCosts = [
     { generation: 10, baseCost: 106, increment: 2, maxCost: 106 }
 ]
 
-export const CalcuateSummonCost = ({ generation, summons, maxSummons }) => {
+export const calcuateSummonCost = ({ generation, summons, maxSummons }) => {
     if (generation < 0 || generation > 10) return '?'
     
     const tier = SummonsCosts[generation]

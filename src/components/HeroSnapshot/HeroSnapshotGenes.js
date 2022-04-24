@@ -10,7 +10,7 @@ const PROFESSIONS = {
     fishing: 'Fishing'
 }
 
-const HeroSnapshotGenes = ({ className, genes, heroid, title, type }) => {
+const HeroSnapshotGenes = ({ className, genes, heroid, highlighted, title, type }) => {
     return <div className={`hero-snapshot-genes ${className}`}>
         <div className='title'>{title}</div>
         {genes.map((gene, i) => {
@@ -22,7 +22,7 @@ const HeroSnapshotGenes = ({ className, genes, heroid, title, type }) => {
             return (
                 <div key={`${heroid}-${GENE_TITLES[i]}`} className='gene'>
                     <div className='label'>{GENE_TITLES[i]}:</div>
-                    <div className='value'>{geneName}</div>
+                    <div className={`value${highlighted && highlighted.includes(gene) ? ' highlighted' : ''}`}>{geneName}</div>
                 </div>
             )
         })}
@@ -33,6 +33,7 @@ HeroSnapshotGenes.propTypes = {
     className: PropTypes.string,
     genes: PropTypes.array,
     heroid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    highlighted: PropTypes.array,
     title: PropTypes.string,
     type: PropTypes.number
 }

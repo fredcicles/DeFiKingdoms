@@ -38,19 +38,19 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
         // Renders the list of options for the Summon Class dropdown
         const basic = basicClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const advanced = advancedClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const elite = eliteClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const exalted = exaltedClasses
             .sort()
-            .map(name => (<MenuItem key={name} value={CONSTANTS.CLASS_REV[name]}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
+            .map(name => (<MenuItem key={name} value={name}>{CONSTANTS.CLASS_REV[name]}</MenuItem>))
 
         const options = [
             (<ListSubheader key='basic'>Basic Classes</ListSubheader>),
@@ -79,14 +79,21 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
 
 
     // Saves changes to the selected Hero
-    const handleHeroIdChange = ({ target }) => {
-        setHeroId(target.value)
+    const handleHeroIdChange = (event) => {
+        setHeroId(event.target.value)
     }
 
 
     // Loads the selected hero
     const handleHeroIdBlur = ({ target }) => {
         onHeroChange && onHeroChange(target.value)
+    }
+
+
+    const handleHeroIdEnter = (event) => {
+        if (event.key === 'Enter') {
+            handleHeroIdBlur(event)
+        }
     }
 
 
@@ -132,6 +139,7 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
                     variant='standard'
                     onChange={handleHeroIdChange}
                     onBlur={handleHeroIdBlur}
+                    onKeyPress={handleHeroIdEnter}
                 />
             </div>
             to summon a

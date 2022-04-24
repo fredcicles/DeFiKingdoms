@@ -115,7 +115,7 @@
     margin-top: 2px;
 }
 
-.hero-snapshot-genes .gene .notBasic {
+.hero-snapshot-genes .gene .highlighted {
     color: yellow;
     /* font-weight: bold; */
 }

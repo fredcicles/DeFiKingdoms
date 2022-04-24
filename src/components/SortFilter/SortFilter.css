@@ -1,5 +1,6 @@
 .sort-filter {
     display: flex;
+    margin-bottom: 10px;
 }
 
 .sort-filter .section {
@@ -38,4 +39,10 @@
 
 .sort-filter .filter-selecter input {
     text-align: center;
+}
+
+.sort-filter .include-summon-class {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8em;
 }

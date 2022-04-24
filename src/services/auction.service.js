@@ -1,5 +1,6 @@
 // First we need to require our GraphQL Package
 import { GraphQLClient, gql } from 'graphql-request'
+import { PascalCase } from '../helpers/format.helpers'
 
 // const apiv5_endpoint = 'http://graph3.defikingdoms.com/subgraphs/name/defikingdoms/apiv5'
 const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
@@ -60,7 +61,7 @@ const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], prof
   // If specified, add main class to filter
   if (mainClasses.length) {
     filter = `${filter}
-    mainClass_in: [${mainClasses.map(name => `"${name}"`)}]`
+    mainClass_in: [${mainClasses.map(name => `"${PascalCase(name)}"`)}]`
   }
 
   // If specified, add profession to filter

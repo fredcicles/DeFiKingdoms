@@ -20,7 +20,7 @@ const PriceGroup = ({ label, showJewel, value }) => (
     </div>
 )
 
-const HeroSnapshot = ({ hero, title, view }) => {
+const HeroSnapshot = ({ highlights, hero, title, view }) => {
     const grl = `Gen ${hero.generation} | ${Rarity[hero.rarity]} | Level ${hero.level}`
     const cp = `${PascalCase(hero.mainClass)} / ${PascalCase(hero.subClass)} | ${PascalCase(hero.profession)}`
 
@@ -39,7 +39,7 @@ const HeroSnapshot = ({ hero, title, view }) => {
                 {cp}
             </div>
             {view === 'front' && <HeroSnapshotFront hero={hero} />}
-            {view === 'back' && <HeroSnapshotBack hero={hero} />}
+            {view === 'back' && <HeroSnapshotBack hero={hero} highlights={highlights} />}
             <div className='hero-snapshot-pricing'>
                 {hero.price && (<PriceGroup label={<>{`${hero.auctionType === 'sale' ? 'Purchase' : 'Rental'}`}<br />Price</>} value={hero.price} showJewel />)}
                 <PriceGroup label={<>Summon<br />Cost</>} value={hero.summonCost} showJewel />
@@ -55,6 +55,7 @@ const HeroSnapshot = ({ hero, title, view }) => {
 
 HeroSnapshot.propTypes = {
     hero: PropTypes.object,
+    highlights: PropTypes.object,
     view: PropTypes.string
 }
 

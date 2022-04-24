@@ -5,7 +5,7 @@ const StatGene = ({ boldIfNot, value }) => {
     let className = 'value'
 
     if (boldIfNot && !value.toString().toLowerCase().includes(boldIfNot)) {
-         className += ' notBasic'
+         className += ' highlighted'
     }
 
     return (

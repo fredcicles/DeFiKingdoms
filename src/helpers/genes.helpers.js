@@ -1,8 +1,8 @@
 import { getHeroTier } from '@thanpolas/dfk-hero/src/heroes-helpers/summon-utils.ent'
 import { classMutationPairings } from '../constants/hero-classes.const'
-import { PascalCase } from './format.helpers'
 
 const dominantGeneProbabilities = [0.75, 0.1875, 0.046875, 0.015625]
+
 
 const mutationProbabilities = {
     'basic': 0.25,
@@ -11,10 +11,14 @@ const mutationProbabilities = {
     'exalted': 0.125
 }
 
+
 const getPotentialDominantGenes = heroGenes => {
-    return heroGenes.map((name, i) => ({ name, value: dominantGeneProbabilities[i] }))
+    return condenseGenes(heroGenes.map((name, i) => ({ name, value: dominantGeneProbabilities[i] })))
 }
 
+
+// If the same gene appears in multiple gene slots, combine those in to a single gene/value pair.
+// value equals the sum of the multiple slots
 const condenseGenes = genes => {
     return genes.reduce((aggregate, current, i) => {
         const match = aggregate.find(existing => existing.name === current.name)
@@ -28,27 +32,32 @@ const condenseGenes = genes => {
     }, [])
 }
 
+
 //  - Note: this will update hero1 and hero2 if mutations exist
-const getMutations = (hero1, hero2) => {
+const getMutations = (hero1Genes, hero2Genes) => {
     const mutations = []
 
-    for (let currentGene = 0; currentGene < 4; currentGene++) {
-        // 2. Mutable dominant gene
-        const mutation = getMutationProbability(hero1[currentGene], hero2[currentGene])
+    for (let i = 0; i < hero1Genes.length; i++) {
+        for (let j = 0; j < hero2Genes.length; j++) {
+            // 2. Mutable dominant gene
+            const mutation = getMutationProbability(hero1Genes[i], hero2Genes[j])
 
-        // 3. Adjust dominant gene, if mutation is possible
-        if (mutation) {
-            mutations.push(mutation)
-            hero1[currentGene].value -= mutation.value
-            hero2[currentGene].value -= mutation.value
+            // 3. Adjust dominant gene, if mutation is possible
+            if (mutation) {
+                mutations.push(mutation)
+                hero1Genes[i].value -= mutation.value
+                hero2Genes[j].value -= mutation.value
+                break
+            }
         }
     }
 
-    return condenseGenes(mutations)
+    return mutations
 }
 
+
 const getMutationProbability = (hero1DominantGene, hero2DominantGene) => {
-    const mutation = lookupMutation(PascalCase(hero1DominantGene.name), PascalCase(hero2DominantGene.name))
+    const mutation = lookupMutation(hero1DominantGene.name, hero2DominantGene.name)
 
     // If a mutation could occur, then calculate probability
     if (mutation) {
@@ -64,10 +73,12 @@ const getMutationProbability = (hero1DominantGene, hero2DominantGene) => {
     return null
 }
 
+
 const lookupMutation = (gene1, gene2) => classMutationPairings.find(pair => {
     const m = gene1 !== gene2 && pair.classes.includes(gene1) && pair.classes.includes(gene2)
     return m
 })
+
 
 // Divide the probability value for each gene in half
 const halveGenes = genes => genes.forEach(gene => gene.value = gene.value / 2)
@@ -106,7 +117,7 @@ export const getProbabilityThatHeroesCanSummonTargetGene = (hero1Genes, hero2Gen
     return classProbabilities.find(_class => _class.name.toLowerCase() === targetClass.toLowerCase())
 }
 
-export const getPossibleSummonClasses = (parentClass, summonedClass) => {
+export const getPossibleSummonClasses = (parentClass, summonedClass, include) => {
     const classes = [summonedClass]
 
     // If the parent and the child are the same class, 2nd parent should be same as 1st parent for highest probability

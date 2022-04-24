@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { CalcuateSummonCost } from '../../helpers/prices.helper'
 import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
-import { getHeroById } from '../../services/hero.service'
 import { getHeroDataByAuction } from '../../services/auction.service'
-import { getMutationClass, getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
-import { ToPrice } from '../../helpers/format.helpers'
+import { calcuateSummonCost } from '../../helpers/prices.helper'
+import { getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
+import { CamelCase, ToPrice } from '../../helpers/format.helpers'
+import { getMainHero, sortAndFilterHeroes } from './functions'
+
 import HeroSnapshot from '../HeroSnapshot'
 import SortFilter from '../SortFilter/SortFilter'
 import SearchFormSimple from '../SearchFormSimple'
 import SummonsMatchList from '../SummonsMatchList'
+
 import './styles.css'
 
 const statusMessages = [
@@ -42,7 +44,8 @@ const RegressiveSearchPage = () => {
     const [mutationClass, setMutationClass] = useState('')
     const [mainHero, setMainHero] = useState()
     const [heroes, setHeroes] = useState([])
-    const [view, setView] = useState('front')
+    const [view, setView] = useState('back')
+    const [highlights, setHighlights] = useState()
 
     const delay = ms => new Promise(res => setTimeout(res, ms))
 
@@ -58,16 +61,17 @@ const RegressiveSearchPage = () => {
 
     // Looks up the selected Hero
     const handleHeroChange = async heroId => {
-        if (heroId) {
+        if (heroId && (!mainHero || mainHero.id !== heroId)) {
+            // Clear currently displayed main and matching heroes
             setHeroes([])
             setMainHero()
-            let data = await getHeroById(heroId)
-            data = decodeRecessiveGenesAndNormalize(data.heroes)
-            data[0].summonCost = CalcuateSummonCost(data[0])
-            setMainHero(data[0])
+
+            // Retrieve the main hero from DFK
+            const _mainHero = await getMainHero(heroId)
+            setMainHero(_mainHero)
 
             // Set a default for the class to summon based on the selected hero
-            setMutationClass(getMutationClass(data[0].mainClass))
+            setMutationClass(_mainHero.mutationClass)
         }
     }
 
@@ -87,9 +91,12 @@ const RegressiveSearchPage = () => {
         let offset = 0
         let isLastPage = false
 
+        // Set the highlights
+        const classes = getPossibleSummonClasses(CamelCase(mainHero.mainClass), searchCriteria.summonClass)
+        setHighlights({ mainClass: classes, profession: [searchCriteria.summonProfession] })
+
         while (!isLastPage) {
             // Retrieve a page of hero listings from tavern
-            const classes = getPossibleSummonClasses(mainHero.mainClass, searchCriteria.summonClass)
             const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, classes, searchCriteria.summonProfession, pageSize, offset)
             const listedHeroes = decodeRecessiveGenesAndNormalize(pageOfListings.heroes)
 
@@ -97,7 +104,7 @@ const RegressiveSearchPage = () => {
             for (let i = 0; i < listedHeroes.length; i++) {
                 const heroToAnalyze = listedHeroes[i]
                 heroToAnalyze.auctionType = searchCriteria.auctionType
-                heroToAnalyze.summonCost = CalcuateSummonCost(heroToAnalyze)
+                heroToAnalyze.summonCost = calcuateSummonCost(heroToAnalyze)
                 heroToAnalyze.price = ToPrice(heroToAnalyze.price)
                 const classProbability = getProbabilityThatHeroesCanSummonTargetGene(mainHero.mainClassGenes, heroToAnalyze.mainClassGenes, searchCriteria.summonClass)
 
@@ -147,40 +154,16 @@ const RegressiveSearchPage = () => {
         setView(checked ? 'front' : 'back')
     }
 
-    let sortedHeroes = heroes
-
-    // Filter based on filter criteria
-    if (filters.summonsRemaining || filters.maxSummons || filters.minGen || filters.maxGen) {
-        sortedHeroes = sortedHeroes.filter(hero => {
-            const remainingSummons = !filters.summonsRemaining || Number(hero.summonsRemaining) >= Number(filters.summonsRemaining)
-            const maxSummons = !filters.maxSummons || Number(hero.maxSummons) >= Number(filters.maxSummons)
-            const minGen = filters.minGen === '' || Number(hero.generation) >= Number(filters.minGen)
-            const maxGen = filters.maxGen === '' || Number(hero.generation) <= Number(filters.maxGen)
-            return maxSummons && remainingSummons && minGen && maxGen
-        })
-    }
-
-    // Heroes are sorted by Probability by default, only sort here if a different sorting is requested
-    sortedHeroes = sortBy === 'probability' ?
-        sortedHeroes.sort((a, b) => a.targetProbability > b.targetProbability ? -1 : a.targetProbability < b.targetProbability ? 1 : 0) :
-        sortedHeroes.sort((a, b) => {
-            if (sortBy === 'price') {
-                const aPrice = a.price + (a.auctionType === 'sale' ? 0 : a.summonCost)
-                const bPrice = b.price + (b.auctionType === 'sale' ? 0 : b.summonCost)
-                return aPrice > bPrice ? 1 : aPrice < bPrice ? -1 : 0
-            }
-
-            return 0
-        })
+    const sortedHeroes = sortAndFilterHeroes(heroes, filters, sortBy, mutationClass)
 
     return (
         <>
             <SearchFormSimple defaultSummonClass={mutationClass} isHeroLoaded={!!mainHero} onHeroChange={handleHeroChange} onToggle={handleSearchFormToggle} onSubmit={handleSubmit} />
-            <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} onViewToggled={handleViewToggled} visible={heroes.length > 0} />
+            <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} onViewToggled={handleViewToggled} visible={mainHero} />
             <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>
                 <MainHero hero={mainHero} view={view} />
-                <SummonsMatchList heroes={sortedHeroes} view={view} />
+                <SummonsMatchList heroes={sortedHeroes} view={view} highlights={highlights} />
             </div>
         </>
     )

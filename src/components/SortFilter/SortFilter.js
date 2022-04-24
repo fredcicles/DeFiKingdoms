@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import Checkbox from '@mui/material/Checkbox'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Switch from '@mui/material/Switch'
@@ -12,12 +13,14 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
     const [maxSummons, setMaxSummons] = useState('')
     const [minGen, setMinGen] = useState('0')
     const [maxGen, setMaxGen] = useState('14')
+    const [includeSummonClass, setIncludeSummonClass] = useState(false)
 
     const handleFilterChange = ({ target }) => {
         let _summonsRemaining = summonsRemaining
         let _maxSummons = maxSummons
         let _minGen = minGen
         let _maxGen = maxGen
+        let _includeSummonClass = includeSummonClass
 
         if (target.name === 'summonsRemaining') {
             _summonsRemaining = target.value
@@ -39,7 +42,12 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
             setMaxGen(target.value)
         }
 
-        onFiltersChange({ summonsRemaining: _summonsRemaining, maxSummons: _maxSummons, minGen: _minGen, maxGen: _maxGen })
+        if (target.name === 'includeSummonClass') {
+            _includeSummonClass = Boolean(target.value)
+            setIncludeSummonClass(target.value)
+        }
+
+        onFiltersChange({ summonsRemaining: _summonsRemaining, maxSummons: _maxSummons, minGen: _minGen, maxGen: _maxGen, includeSummonClass: _includeSummonClass })
     }
 
     const handleViewToggled = (event) => {
@@ -132,6 +140,14 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                             />
                         </div>
                     </div>
+                </div>
+                <div className='include-summon-class'>
+                    <div>Include Summon Class</div>
+                    <Checkbox
+                        name='includeSummonClass'
+                        value={includeSummonClass}
+                        onChange={handleFilterChange}
+                    />
                 </div>
             </div>
         </div>
