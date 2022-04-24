@@ -66,7 +66,7 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
     return (
         <div className='sort-filter'>
             <div className='section'>
-                <Switch defaultChecked onChange={handleViewToggled} />
+                <Switch defaultChecked={false} onChange={handleViewToggled} />
                 Flip Cards
             </div>
             <div className='section'>

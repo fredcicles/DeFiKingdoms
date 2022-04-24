@@ -106,26 +106,35 @@
     justify-content: space-between;
 }
 
+.hero-snapshot-stat-genes-section {
+    display: flex;
+    margin-top: 7px;
+    margin-bottom: 5px;
+    justify-content: space-evenly;
+}
+
 .hero-snapshot-genes .title {
     font-weight: 600;
+    text-decoration: underline;
 }
 
 .hero-snapshot-genes .gene {
     display: flex;
-    margin-top: 2px;
+    align-items: baseline;
+    margin-top: 3px;
 }
 
 .hero-snapshot-genes .gene .highlighted {
     color: yellow;
-    /* font-weight: bold; */
 }
 
 .hero-snapshot-genes .label {
-    width: 25px;
+    width: 20px;
+    font-size: 0.7em;
 }
 
 .hero-snapshot-genes .value {
-    font-size: .9em;
+    font-size: .95em;
 }
 
 .hero-stat-section {

@@ -11,7 +11,7 @@ const PROFESSIONS = {
 }
 
 const HeroSnapshotGenes = ({ className, genes, heroid, highlighted, title, type }) => {
-    return <div className={`hero-snapshot-genes ${className}`}>
+    return <div className={`hero-snapshot-genes${className ? ` ${className}` : ''}`}>
         <div className='title'>{title}</div>
         {genes.map((gene, i) => {
             // Get the nice name for the gene

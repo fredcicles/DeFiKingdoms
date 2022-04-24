@@ -12,7 +12,7 @@ const HeroSnapshotBack = ({ highlights, hero }) => {
                 <HeroSnapshotGenes genes={hero.subClassGenes} heroid={hero.id} title='SubClass' />
                 <HeroSnapshotGenes genes={hero.professionGenes} heroid={hero.id} title='Profession' type={GENE_TYPES.Professions} highlighted={highlights.profession} />
             </div>
-            <div className='hero-snapshot-genes-section'>
+            <div className='hero-snapshot-stat-genes-section'>
                 <HeroSnapshotStatGenes genes={hero} heroid={hero.id} />
             </div>
         </>
