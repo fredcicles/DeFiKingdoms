@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { CLASS_REV, basicClasses, advancedClasses, eliteClasses, exaltedClasses, PROFESSIONS_AR as professions } from '../../constants/degenking'
+import { REALMS } from '../../constants/realms'
 
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -13,9 +14,12 @@ import TextField from '@mui/material/TextField'
 
 import './styles.css'
 
+const JewelIcon = () => (<img src='/jewel50.png' className='jewel-icon' alt='Jewel' />)
+const CrystalIcon = () => (<img src='/crystal100.png' className='jewel-icon' alt='Jewel' />)
+
 const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }]
 
-const realms = [{ label: 'Serendale', value: 'hmy' }, { label: 'Crystalvale', value: 'dfk' }]
+const networks = [{ label: 'Serendale', value: 'hmy' }, { label: 'Crystalvale', value: 'dfk' }]
 
 const professionAllOption = { label: 'any profession', value: 'all' }
 
@@ -29,7 +33,7 @@ const options = (array) => {
 
 const auctionTypeOptions = options(auctionTypes)
 
-const realmOptions = options(realms)
+const networkOptions = options(networks)
 
 const professionOptions = options([professionAllOption, ...professions])
 
@@ -37,7 +41,8 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
     const [summonClass, setSummonClass] = useState('')
     const [summonProfession, setSummonProfession] = useState('all')
     const [auctionType, setAuctionType] = useState('assisting')
-    const [realm, setRealm] = useState('hmy')
+    const [network, setNetwork] = useState('hmy')
+    const [originRealm, setOriginRealm] = useState(REALMS.serendale.id)
     const [heroId, setHeroId] = useState('')
     const [summonClassOptions, setSummonClassOptions] = useState([])
 
@@ -85,12 +90,6 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
     }
 
 
-    // Saves changes to the selected Realm
-    const handleRealmChange = ({ target }) => {
-        setRealm(target.value)
-    }
-
-
     // Saves changes to the selected Hero
     const handleHeroIdChange = (event) => {
         setHeroId(event.target.value)
@@ -99,7 +98,7 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
 
     // Loads the selected hero
     const handleHeroIdBlur = ({ target }) => {
-        onHeroChange && onHeroChange(target.value)
+        onHeroChange && onHeroChange(target.value, originRealm)
     }
 
 
@@ -107,6 +106,19 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
         if (event.key === 'Enter') {
             handleHeroIdBlur(event)
         }
+    }
+
+
+    // Saves changes to the selected Network
+    const handleNetworkChange = ({ target }) => {
+        setNetwork(target.value)
+    }
+
+
+    // Saves changes to the selected Origin Realm
+    const handleOriginRealmChange = ({ target }) => {
+        setOriginRealm(target.value)
+        heroId && onHeroChange && onHeroChange(heroId, target.value)
     }
 
 
@@ -124,7 +136,14 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
 
     // Submits the form to the calling component
     const handleSubmit = () => {
-        const searchCriteria = { auctionType, heroId, realm, summonClass, summonProfession: summonProfession === 'all' ? '' : summonProfession }
+        const searchCriteria = {
+            auctionType,
+            heroId,
+            network,
+            originRealm,
+            summonClass,
+            summonProfession: summonProfession === 'all' ? '' : summonProfession
+        }
         onSubmit && onSubmit(searchCriteria)
     }
 
@@ -148,29 +167,43 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
             <Grid item>
                 in the
                 <Select
-                    label='Realm'
-                    name='realm'
-                    className='realm-selecter'
-                    value={realm}
+                    name='network'
+                    className='network-selecter'
+                    value={network}
                     variant='standard'
-                    onChange={handleRealmChange}
+                    onChange={handleNetworkChange}
                 >
-                    {realmOptions}
+                    {networkOptions}
                 </Select>
-                tavern, 
+                tavern,
             </Grid>
             <Grid item className='hero-container'>
-                who can match with hero #
-                    <TextField
-                        className='hero-id-selecter'
-                        placeholder='hero id'
-                        name='hero-id'
-                        value={heroId}
-                        variant='standard'
-                        onChange={handleHeroIdChange}
-                        onBlur={handleHeroIdBlur}
-                        onKeyPress={handleHeroIdEnter}
-                    />
+                who can match with hero
+                <Select
+                    className='origin-realm-selecter'
+                    name='origin-realm'
+                    value={originRealm}
+                    variant='standard'
+                    onChange={handleOriginRealmChange}
+                >
+                    <MenuItem value={REALMS.serendale.id}>
+                        <JewelIcon />
+                    </MenuItem>
+                    <MenuItem value={REALMS.crystalvale.id}>
+                        <CrystalIcon />
+                    </MenuItem>
+                </Select>
+                #
+                <TextField
+                    className='hero-id-selecter'
+                    placeholder='hero id'
+                    name='hero-id'
+                    value={heroId}
+                    variant='standard'
+                    onChange={handleHeroIdChange}
+                    onBlur={handleHeroIdBlur}
+                    onKeyPress={handleHeroIdEnter}
+                />
             </Grid>
             <Grid item>
                 to summon a

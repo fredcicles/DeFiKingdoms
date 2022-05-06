@@ -5,6 +5,7 @@ import { calcuateSummonCost } from '../../helpers/prices.helper'
 import { getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
 import { CamelCase, ToPrice } from '../../helpers/format.helpers'
 import { getMainHero, sortAndFilterHeroes } from './functions'
+import { REALMS } from '../../constants/realms'
 
 import Alert from '@mui/material/Alert'
 import Container from '@mui/material/Container'
@@ -66,7 +67,8 @@ const RegressiveSearchPage = () => {
     }
 
     // Looks up the selected Hero
-    const handleHeroChange = async heroId => {
+    const handleHeroChange = async (heroNumber, originRealm) => {
+        const heroId = originRealm === REALMS.serendale.id ? heroNumber : `${'1000000000000'.slice(0, 13 - heroNumber.length)}${heroNumber}`
         if (heroId && (!mainHero || mainHero.id !== heroId)) {
             // Clear currently displayed main and matching heroes
             setHeroes([])
@@ -103,7 +105,7 @@ const RegressiveSearchPage = () => {
 
         while (!isLastPage) {
             // Retrieve a page of hero listings from tavern
-            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, searchCriteria.realm, classes, searchCriteria.summonProfession, pageSize, offset)
+            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, searchCriteria.network, classes, searchCriteria.summonProfession, pageSize, offset)
             const listedHeroes = decodeRecessiveGenesAndNormalize(pageOfListings.heroes)
 
             // Analyze each of the heroes in auction

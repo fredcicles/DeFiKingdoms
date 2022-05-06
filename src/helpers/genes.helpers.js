@@ -1,5 +1,5 @@
 import { getHeroTier } from '@thanpolas/degenking/src/heroes-helpers/summon-utils.ent'
-import { classMutationPairings } from '../constants/hero-classes.const'
+import { classMutationPairings } from '../constants/hero-classes'
 
 const dominantGeneProbabilities = [0.75, 0.1875, 0.046875, 0.015625]
 

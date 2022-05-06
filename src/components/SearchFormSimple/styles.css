@@ -4,7 +4,8 @@
 
 .auction-type-selecter,
 .hero-id-selecter, 
-.realm-selecter,
+.network-selecter,
+.origin-realm-selecter,
 .summoned-class-selecter,
 .summoned-profession-selecter { 
     margin: 0 5px 1px 5px;
@@ -12,16 +13,17 @@
 
 .auction-type-selecter>div,
 .hero-id-selecter div,
-.realm-selecter>div,
+.network-selecter>div,
 .summoned-class-selecter>div,
 .summoned-profession-selecter>div {
     color: blue !important;
 }
 
-.summoned-class-selecter>div,
-.summoned-profession-selecter>div,
 .auction-type-selecter>div,
-.realm-selecter>div {
+.network-selecter>div,
+.origin-realm-selecter>div,
+.summoned-class-selecter>div,
+.summoned-profession-selecter>div {
     padding-bottom: 0;
     text-align: center;
 }
@@ -47,7 +49,7 @@
     width: 70px;
 }
 
-.realm-selecter>div {
+.network-selecter>div {
     width: 90px;
 }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Rarity } from '@thanpolas/degenking/src/constants/constants.const'
+import { REALMS } from '../../constants/realms'
 import { PascalCase } from '../../helpers/format.helpers'
 import HeroSnapshotBack from './HeroSnapshotBack'
 import HeroSnapshotFront from './HeroSnapshotFront'
@@ -27,6 +28,7 @@ const PriceGroup = ({ label, showIcon, network, value }) => {
 const HeroSnapshot = ({ highlights, hero, title, view }) => {
     const grl = `Gen ${hero.generation} | ${Rarity[hero.rarity]} | Level ${hero.level}`
     const cp = `${PascalCase(hero.mainClass)} / ${PascalCase(hero.subClass)} | ${PascalCase(hero.profession)}`
+    const icon = hero.originRealm === REALMS.serendale.id ? <JewelIcon /> : <CrystalIcon />
 
     return (
         <div className={`hero-snapshot ${rarityClass[hero.rarity]}`}>
@@ -34,7 +36,7 @@ const HeroSnapshot = ({ highlights, hero, title, view }) => {
                 {title}
             </div>
             <div className='hero-snapshot-name'>
-                Hero #{hero.displayId}
+                Hero {icon} #{hero.displayId}
             </div>
             <div className='hero-snapshot-grc'>
                 {grl}
