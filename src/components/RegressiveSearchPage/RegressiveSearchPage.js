@@ -73,13 +73,21 @@ const RegressiveSearchPage = () => {
             // Clear currently displayed main and matching heroes
             setHeroes([])
             setMainHero()
+            setMutationClass('')
+            setLoadingMessage('')
 
             // Retrieve the main hero from DFK
             const _mainHero = await getMainHero(heroId)
-            setMainHero(_mainHero)
 
-            // Set a default for the class to summon based on the selected hero
-            setMutationClass(_mainHero.mutationClass)
+            if (_mainHero) {
+                setMainHero(_mainHero)
+
+                // Set a default for the class to summon based on the selected hero
+                setMutationClass(_mainHero.mutationClass)
+            } else {
+                setLoadingMessage('Hero not found.')
+                setIsLoading(true)
+            }
         }
     }
 

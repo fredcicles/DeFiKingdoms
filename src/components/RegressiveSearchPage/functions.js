@@ -7,6 +7,8 @@ import { CamelCase, PascalCase } from '../../helpers/format.helpers'
 export const getMainHero = async id => {
     const data = await getHeroById(id)
 
+    if (!data.heroes.length) return null
+
     const hero = decodeRecessiveGenesAndNormalize(data.heroes)[0]
     hero.displayId = hero.id.length === 13 ? Number(hero.id.slice(1)).toString() : hero.id
     hero.summonCost = calcuateSummonCost(hero)
