@@ -1,4 +1,4 @@
-import { getHeroTier } from '@thanpolas/dfk-hero/src/heroes-helpers/summon-utils.ent'
+import { getHeroTier } from '@thanpolas/degenking/src/heroes-helpers/summon-utils.ent'
 import { classMutationPairings } from '../constants/hero-classes.const'
 
 const dominantGeneProbabilities = [0.75, 0.1875, 0.046875, 0.015625]

@@ -5,50 +5,10 @@ import { PascalCase } from '../helpers/format.helpers'
 // const apiv5_endpoint = 'http://graph3.defikingdoms.com/subgraphs/name/defikingdoms/apiv5'
 const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
 
-const getAuctionData = async (type = 'sale', take = 50, skip = 0) => {
-  console.log(`Retrieving hero listings ${skip + 1} - ${skip + take} from the Tavern`)
-
-  const options = { headers: { 'Content-Type': 'application/json' } }
-
-  // Create a new GQL Client
-  const graphQLClient = new GraphQLClient(apiv6_endpoint, options)
-
-  const table = type === 'sale' ? 'saleAuctions' : 'assistingAuctions'
-
-  // Define our query, this will return data for the first 1000 open auctions
-  // 1000 is the max query size for GQL
-  const query = gql`
-	{
-    auctions: ${table}(
-      orderBy: startedAt
-      orderDirection: desc
-      first: ${take}
-      skip: ${skip}
-      where:{
-        open: true
-      }
-    )
-    {
-      id
-      startingPrice
-      endingPrice
-      open
-      tokenId{
-        id
-        numberId
-      }
-    }
-  }`
-
-  let data = await graphQLClient.request(query)
-  console.log(`${data.auctions.length} hero listings retrieved from the Tavern`)
-  return data
-}
-
 /*
  * auctionType: sale | assisting
  */
-const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], profession = '', take = 50, skip = 0) => {
+const getHeroDataByAuction = async (auctionType = 'sale', network = 'hmy', mainClasses = [], profession = '', take = 50, skip = 0) => {
   console.log(`Retrieving hero listings ${skip + 1} - ${skip + take} from the Tavern`)
 
   const options = { headers: { 'Content-Type': 'application/json' } }
@@ -56,7 +16,8 @@ const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], prof
   // Create a new GQL Client
   const graphQLClient = new GraphQLClient(apiv6_endpoint, options)
 
-  let filter = `${auctionType}Price_not: null`
+  let filter = `${auctionType}Price_not: null
+                network: "${network}"`
 
   // If specified, add main class to filter
   if (mainClasses.length) {
@@ -89,6 +50,8 @@ const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], prof
       owner{
         name
       }
+      originRealm
+      network
       firstName
       lastName
       rarity
@@ -141,4 +104,4 @@ const getHeroDataByAuction = async (auctionType = 'sale', mainClasses = [], prof
   return data
 }
 
-export { getAuctionData, getHeroDataByAuction }
+export { getHeroDataByAuction }

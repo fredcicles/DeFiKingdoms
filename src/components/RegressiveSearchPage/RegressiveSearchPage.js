@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
+import { decodeRecessiveGenesAndNormalize } from '@thanpolas/degenking/src/heroes-helpers/recessive-genes.ent'
 import { getHeroDataByAuction } from '../../services/auction.service'
 import { calcuateSummonCost } from '../../helpers/prices.helper'
 import { getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
 import { CamelCase, ToPrice } from '../../helpers/format.helpers'
 import { getMainHero, sortAndFilterHeroes } from './functions'
 
+import Alert from '@mui/material/Alert'
+import Container from '@mui/material/Container'
 import HeroSnapshot from '../HeroSnapshot'
 import SortFilter from '../SortFilter/SortFilter'
-import SearchFormSimple from '../SearchFormSimple'
+import SearchFormSimple from '../SearchFormSimple/SearchFormSimple'
 import SummonsMatchList from '../SummonsMatchList'
 
 import './styles.css'
@@ -31,7 +33,11 @@ const MainHero = ({ hero, view }) => {
 
 const LoadingMessage = ({ heroCount, loaded, loading, message }) => {
     const textToDisplay = loading ? message : loaded && !heroCount ? 'No Heroes Found' : null
-    return <div className='loading-message'>{textToDisplay}</div>
+    return textToDisplay ? (
+        <Alert variant='outlined' severity='success' className='loading-message'>
+            {textToDisplay}
+        </Alert>
+    ) : null
 }
 
 const RegressiveSearchPage = () => {
@@ -97,12 +103,13 @@ const RegressiveSearchPage = () => {
 
         while (!isLastPage) {
             // Retrieve a page of hero listings from tavern
-            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, classes, searchCriteria.summonProfession, pageSize, offset)
+            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, searchCriteria.realm, classes, searchCriteria.summonProfession, pageSize, offset)
             const listedHeroes = decodeRecessiveGenesAndNormalize(pageOfListings.heroes)
 
             // Analyze each of the heroes in auction
             for (let i = 0; i < listedHeroes.length; i++) {
                 const heroToAnalyze = listedHeroes[i]
+                heroToAnalyze.displayId = heroToAnalyze.id.length === 13 ? Number(heroToAnalyze.id.slice(1)).toString() : heroToAnalyze.id
                 heroToAnalyze.auctionType = searchCriteria.auctionType
                 heroToAnalyze.summonCost = calcuateSummonCost(heroToAnalyze)
                 heroToAnalyze.price = ToPrice(heroToAnalyze.price)
@@ -157,15 +164,15 @@ const RegressiveSearchPage = () => {
     const sortedHeroes = sortAndFilterHeroes(heroes, filters, sortBy, mutationClass)
 
     return (
-        <>
+        <Container maxWidth='xl'>
             <SearchFormSimple defaultSummonClass={mutationClass} isHeroLoaded={!!mainHero} onHeroChange={handleHeroChange} onToggle={handleSearchFormToggle} onSubmit={handleSubmit} />
-            <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} onViewToggled={handleViewToggled} visible={mainHero} />
+            <SortFilter onFiltersChange={handleFiltersChange} onSortByChange={handleSortByChange} onViewToggled={handleViewToggled} visible={!!mainHero} />
             <LoadingMessage heroCount={heroes.length} loading={isLoading} loaded={hasLoaded} message={loadingMessage} />
             <div className='hero-list'>
                 <MainHero hero={mainHero} view={view} />
                 <SummonsMatchList heroes={sortedHeroes} view={view} highlights={highlights} />
             </div>
-        </>
+        </Container>
     )
 }
 

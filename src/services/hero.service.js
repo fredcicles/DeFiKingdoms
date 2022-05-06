@@ -33,6 +33,8 @@ export const getHeroById = async (id) => {
 
 			firstName
 			lastName
+			originRealm
+			network
 			rarity
 			gender
 			generation

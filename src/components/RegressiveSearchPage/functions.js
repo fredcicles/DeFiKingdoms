@@ -1,4 +1,4 @@
-import { decodeRecessiveGenesAndNormalize } from '@thanpolas/dfk-hero/src/heroes-helpers/recessive-genes.ent'
+import { decodeRecessiveGenesAndNormalize } from '@thanpolas/degenking/src/heroes-helpers/recessive-genes.ent'
 import { getHeroById } from '../../services/hero.service'
 import { calcuateSummonCost } from '../../helpers/prices.helper'
 import { getMutationClass } from '../../helpers/genes.helpers'
@@ -8,6 +8,7 @@ export const getMainHero = async id => {
     const data = await getHeroById(id)
 
     const hero = decodeRecessiveGenesAndNormalize(data.heroes)[0]
+    hero.displayId = hero.id.length === 13 ? Number(hero.id.slice(1)).toString() : hero.id
     hero.summonCost = calcuateSummonCost(hero)
     hero.mutationClass = getMutationClass(CamelCase(hero.mainClass))
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '@mui/material/Checkbox'
+import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Switch from '@mui/material/Switch'
@@ -64,12 +65,12 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
         return null
 
     return (
-        <div className='sort-filter'>
-            <div className='section'>
+        <Grid container className='sort-filter' justifyContent='center'>            
+            <Grid item className='section'>
                 <Switch defaultChecked={false} onChange={handleViewToggled} />
                 Flip Cards
-            </div>
-            <div className='section'>
+            </Grid>
+            <Grid item className='section'>
                 <div className='sort-label'>
                     Sort By:
                 </div>
@@ -86,8 +87,8 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                         <MenuItem key='price' value='price'>Price</MenuItem>
                     </Select>
                 </div>
-            </div>
-            <div className='section'>
+            </Grid>
+            <Grid item className='section'>
                 <div className='filter-label'>
                     Filters:
                 </div>
@@ -149,8 +150,8 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                         onChange={handleFilterChange}
                     />
                 </div>
-            </div>
-        </div>
+            </Grid>
+        </Grid>
     )
 }
 

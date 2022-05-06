@@ -1,9 +1,14 @@
 .hero-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .hero-list .main-hero {
     border-radius: 7%;
     background-color: red;
+}
+
+.loading-message {
+    margin-bottom: 10px;
 }

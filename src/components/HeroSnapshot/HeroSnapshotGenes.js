@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { CLASS_REV } from '@thanpolas/dfk-hero/src/constants/constants.const'
+import { CLASS_REV } from '../../constants/degenking'
 import { GENE_TITLES, GENE_TYPES } from '../../constants/hero-genes.const'
 
 const PROFESSIONS = {

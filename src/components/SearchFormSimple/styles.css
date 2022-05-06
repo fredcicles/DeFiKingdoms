@@ -1,19 +1,18 @@
 .search-form-simple {
-    display: flex;
-    align-items: center;
-    margin: 10px;
+    margin: 0 10px;
 }
 
 .auction-type-selecter,
 .hero-id-selecter, 
+.realm-selecter,
 .summoned-class-selecter,
 .summoned-profession-selecter { 
-    margin: 0 5px;
-    margin-bottom: 1px;
+    margin: 0 5px 1px 5px;
 }
 
 .auction-type-selecter>div,
-.hero-id-selecter input,
+.hero-id-selecter div,
+.realm-selecter>div,
 .summoned-class-selecter>div,
 .summoned-profession-selecter>div {
     color: blue !important;
@@ -21,22 +20,35 @@
 
 .summoned-class-selecter>div,
 .summoned-profession-selecter>div,
-.auction-type-selecter>div {
+.auction-type-selecter>div,
+.realm-selecter>div {
     padding-bottom: 0;
     text-align: center;
 }
 
+.hero-id-selecter {
+    vertical-align: inherit !important;
+}
+
 .hero-id-selecter input {
-    text-align: center;
     padding-bottom: 1px;
+    text-align: center;
+}
+
+.hero-container {
+    margin-left: 5px !important;
 }
 
 .auction-type-selecter {
-    width: 80px;
+    width: 70px;
 }
 
-.hero-id-selecter {
+.hero-id-selecter>div {
     width: 70px;
+}
+
+.realm-selecter>div {
+    width: 90px;
 }
 
 .summoned-class-selecter {

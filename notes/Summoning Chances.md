@@ -43,3 +43,4 @@ Having a matching D & R1 gene, will increase the likelihood of mutation from 14%
 
 Thanpolas' DFK Hero Library
 https://github.com/degen-heroes/dfk-hero#hero-data-object
+https://github.com/degen-heroes/degenking

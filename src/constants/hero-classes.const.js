@@ -7,6 +7,7 @@ export const classMutationPairings = [
   { 'classes': ['thief', 'archer'], mutation: 'darkKnight' },
   { 'classes': ['priest', 'wizard'], mutation: 'summoner' },
   { 'classes': ['monk', 'pirate'], mutation: 'ninja' },
+  { 'classes': ['seer', 'berserker'], mutation: 'shapeshifter' },
   { 'classes': ['paladin', 'darkKnight'], mutation: 'dragoon' },
   { 'classes': ['summoner', 'ninja'], mutation: 'sage' },
   { 'classes': ['dragoon', 'sage'], mutation: 'dreadKnight' }
