@@ -10,6 +10,12 @@ export const REALMS = {
 }
 
 export const NETWORKS = {
-    harmony: 'hmy',
-    dfkchain: 'dfk'
+    harmony: {
+        id: 'hmy',
+        name: 'Harmony'
+    },
+    dfkchain: {
+        id: 'dfk',
+        name: 'DFK Chain'
+    }
 }

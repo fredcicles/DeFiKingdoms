@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { CLASS_REV, basicClasses, advancedClasses, eliteClasses, exaltedClasses, PROFESSIONS_AR as professions } from '../../constants/degenking'
-import { REALMS } from '../../constants/realms'
+import { NETWORKS, REALMS } from '../../constants/realms'
 
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -19,7 +19,7 @@ const CrystalIcon = () => (<img src='/crystal100.png' className='jewel-icon' alt
 
 const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }]
 
-const networks = [{ label: 'Serendale', value: 'hmy' }, { label: 'Crystalvale', value: 'dfk' }]
+const networks = [{ label: 'Serendale', value: NETWORKS.harmony.id }, { label: 'Crystalvale', value: NETWORKS.dfkchain.id }]
 
 const professionAllOption = { label: 'any profession', value: 'all' }
 
@@ -41,7 +41,7 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
     const [summonClass, setSummonClass] = useState('')
     const [summonProfession, setSummonProfession] = useState('all')
     const [auctionType, setAuctionType] = useState('assisting')
-    const [network, setNetwork] = useState('hmy')
+    const [network, setNetwork] = useState(NETWORKS.harmony.id)
     const [originRealm, setOriginRealm] = useState(REALMS.serendale.id)
     const [heroId, setHeroId] = useState('')
     const [summonClassOptions, setSummonClassOptions] = useState([])

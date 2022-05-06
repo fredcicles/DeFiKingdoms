@@ -1,6 +1,7 @@
 // First we need to require our GraphQL Package
 import { GraphQLClient, gql } from 'graphql-request'
 import { PascalCase } from '../helpers/format.helpers'
+import { NETWORKS } from '../constants/realms'
 
 // const apiv5_endpoint = 'http://graph3.defikingdoms.com/subgraphs/name/defikingdoms/apiv5'
 const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
@@ -8,7 +9,7 @@ const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.
 /*
  * auctionType: sale | assisting
  */
-const getHeroDataByAuction = async (auctionType = 'sale', network = 'hmy', mainClasses = [], profession = '', take = 50, skip = 0) => {
+const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.harmony.id, mainClasses = [], profession = '', take = 50, skip = 0) => {
   console.log(`Retrieving hero listings ${skip + 1} - ${skip + take} from the Tavern`)
 
   const options = { headers: { 'Content-Type': 'application/json' } }

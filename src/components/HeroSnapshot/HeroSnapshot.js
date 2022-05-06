@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Rarity } from '@thanpolas/degenking/src/constants/constants.const'
-import { REALMS } from '../../constants/realms'
+import { NETWORKS, REALMS } from '../../constants/realms'
 import { PascalCase } from '../../helpers/format.helpers'
 import HeroSnapshotBack from './HeroSnapshotBack'
 import HeroSnapshotFront from './HeroSnapshotFront'
@@ -12,7 +12,7 @@ const JewelIcon = () => (<img src='/jewel50.png' className='jewel-icon' alt='Jew
 const CrystalIcon = () => (<img src='/crystal100.png' className='jewel-icon' alt='Jewel' />)
 
 const PriceGroup = ({ label, showIcon, network, value }) => {
-    const icon = network === 'hmy' ? <JewelIcon /> : <CrystalIcon />
+    const icon = network === NETWORKS.harmony.id ? <JewelIcon /> : <CrystalIcon />
     return (
         <div className='price-group'>
             <div className='price-value'>
