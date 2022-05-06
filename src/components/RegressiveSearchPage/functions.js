@@ -10,6 +10,7 @@ export const getMainHero = async id => {
     if (!data.heroes.length) return null
 
     const hero = decodeRecessiveGenesAndNormalize(data.heroes)[0]
+    sheerFix(hero)
     hero.displayId = hero.id.length === 13 ? Number(hero.id.slice(1)).toString() : hero.id
     hero.summonCost = calcuateSummonCost(hero)
     hero.mutationClass = getMutationClass(CamelCase(hero.mainClass))
@@ -50,4 +51,15 @@ export const sortAndFilterHeroes = (heroes, filters, sortBy, mutationClass) => {
         })
 
     return sortedHeroes
+}
+
+export const sheerFix = (hero) => {
+    const fix = (genes) => {
+        for (let i = 0; i < genes.length; i++) {
+            if (genes[i] === 'sheer') genes[i] = 'seer'
+        }
+    }
+
+    fix(hero.mainClassGenes)
+    fix(hero.subClassGenes)
 }

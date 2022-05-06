@@ -4,7 +4,7 @@ import { getHeroDataByAuction } from '../../services/auction.service'
 import { calcuateSummonCost } from '../../helpers/prices.helper'
 import { getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
 import { CamelCase, ToPrice } from '../../helpers/format.helpers'
-import { getMainHero, sortAndFilterHeroes } from './functions'
+import { getMainHero, sheerFix, sortAndFilterHeroes } from './functions'
 import { REALMS } from '../../constants/realms'
 
 import Alert from '@mui/material/Alert'
@@ -119,6 +119,7 @@ const RegressiveSearchPage = () => {
             // Analyze each of the heroes in auction
             for (let i = 0; i < listedHeroes.length; i++) {
                 const heroToAnalyze = listedHeroes[i]
+                sheerFix(heroToAnalyze)
                 heroToAnalyze.displayId = heroToAnalyze.id.length === 13 ? Number(heroToAnalyze.id.slice(1)).toString() : heroToAnalyze.id
                 heroToAnalyze.auctionType = searchCriteria.auctionType
                 heroToAnalyze.summonCost = calcuateSummonCost(heroToAnalyze)
