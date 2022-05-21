@@ -45,3 +45,32 @@
     flex-direction: column;
     font-size: 0.8em;
 }
+
+.sort-filter .gene-match {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8em;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.sort-filter .gene-match .options {
+    display: flex;    
+}
+
+.sort-filter .gene-match .options .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.sort-filter .gene-match .options .option .gene-checkbox {
+    padding: 2px;
+}
+
+.sort-filter .gene-match .options .option .label {
+    font-size: .8em;
+}

@@ -33,8 +33,11 @@ export const sortAndFilterHeroes = (heroes, filters, sortBy, mutationClass) => {
         const minGen = !filters.minGen || filters.minGen === '' || Number(hero.generation) >= Number(filters.minGen)
         const maxGen = !filters.maxGen || filters.maxGen === '' || Number(hero.generation) <= Number(filters.maxGen)
         const mainClass = filters.includeSummonClass || hero.mainClass !== summonClass
+        const classMatch = !filters.classMatch || hero.mainClassGenes[0] === hero.mainClassGenes[1]
+        const subclassMatch = !filters.subclassMatch || hero.subClassGenes[0] === hero.subClassGenes[1]
+        const professionMatch = !filters.professionMatch || hero.professionGenes[0] === hero.professionGenes[1]
 
-        return maxSummons && remainingSummons && minGen && maxGen && mainClass
+        return maxSummons && remainingSummons && minGen && maxGen && mainClass && classMatch && subclassMatch && professionMatch
     })
 
     // Heroes are sorted by Probability by default, only sort here if a different sorting is requested

@@ -14,6 +14,9 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
     const [maxSummons, setMaxSummons] = useState('')
     const [minGen, setMinGen] = useState('0')
     const [maxGen, setMaxGen] = useState('14')
+    const [classMatch, setClassMatch] = useState(false)
+    const [subclassMatch, setSubclassMatch] = useState(false)
+    const [professionMatch, setProfessionMatch] = useState(false)
     const [includeSummonClass, setIncludeSummonClass] = useState(false)
 
     const handleFilterChange = ({ target }) => {
@@ -21,34 +24,61 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
         let _maxSummons = maxSummons
         let _minGen = minGen
         let _maxGen = maxGen
+        let _classMatch = classMatch
+        let _subclassMatch = subclassMatch
+        let _professionMatch = professionMatch
         let _includeSummonClass = includeSummonClass
 
-        if (target.name === 'summonsRemaining') {
-            _summonsRemaining = target.value
-            setSummonsRemaining(target.value)
+        switch (target.name) {
+            case 'summonsRemaining':
+                _summonsRemaining = target.value
+                setSummonsRemaining(target.value)
+                break;
+            case 'maxSummons':
+                _maxSummons = target.value
+                setMaxSummons(target.value)
+                break;
+            case 'minGen':
+                _minGen = target.value
+                setMinGen(target.value)
+                break;
+            case 'maxGen':
+                _maxGen = target.value
+                setMaxGen(target.value)
+                break;
+            case 'classMatch':
+                _classMatch = target.checked
+                setClassMatch(_classMatch)
+                console.log(`class set to ${_classMatch}`)
+                break;
+            case 'subclassMatch':
+                _subclassMatch = target.checked
+                setSubclassMatch(_subclassMatch)
+                break;
+            case 'professionMatch':
+                _professionMatch = target.checked
+                setProfessionMatch(_professionMatch)
+                break;
+            case 'includeSummonClass':
+                _includeSummonClass = target.checked
+                setIncludeSummonClass(_includeSummonClass)
+                break;
+            default:
+                console.log('unknown search filter selected')
         }
 
-        if (target.name === 'maxSummons') {
-            _maxSummons = target.value
-            setMaxSummons(target.value)
-        }
+        console.log(`${target.name} set to ${target.value}`)
 
-        if (target.name === 'minGen') {
-            _minGen = target.value
-            setMinGen(target.value)
-        }
-
-        if (target.name === 'maxGen') {
-            _maxGen = target.value
-            setMaxGen(target.value)
-        }
-
-        if (target.name === 'includeSummonClass') {
-            _includeSummonClass = Boolean(target.value)
-            setIncludeSummonClass(target.value)
-        }
-
-        onFiltersChange({ summonsRemaining: _summonsRemaining, maxSummons: _maxSummons, minGen: _minGen, maxGen: _maxGen, includeSummonClass: _includeSummonClass })
+        onFiltersChange({
+            summonsRemaining: _summonsRemaining,
+            maxSummons: _maxSummons,
+            minGen: _minGen,
+            maxGen: _maxGen,
+            classMatch: _classMatch,
+            subclassMatch: _subclassMatch,
+            professionMatch: _professionMatch,
+            includeSummonClass: _includeSummonClass
+        })
     }
 
     const handleViewToggled = (event) => {
@@ -65,7 +95,7 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
         return null
 
     return (
-        <Grid container className='sort-filter' justifyContent='center'>            
+        <Grid container className='sort-filter' justifyContent='center'>
             <Grid item className='section'>
                 <Switch defaultChecked={false} onChange={handleViewToggled} />
                 Flip Cards
@@ -139,6 +169,38 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                                 onChange={handleFilterChange}
                                 type='number'
                             />
+                        </div>
+                    </div>
+                </div>
+                <div className='gene-match'>
+                    <div className='heading'>D/R1 Gene Match</div>
+                    <div className='options'>
+                        <div className='option'>
+                            <Checkbox
+                                name='classMatch'
+                                value={classMatch}
+                                onChange={handleFilterChange}
+                                className='gene-checkbox'
+                            />
+                            <div className='label'>Class</div>
+                        </div>
+                        <div className='option'>
+                            <Checkbox
+                                name='subclassMatch'
+                                value={subclassMatch}
+                                onChange={handleFilterChange}
+                                className='gene-checkbox'
+                            />
+                            <div className='label'>Subclass</div>
+                        </div>
+                        <div className='option'>
+                            <Checkbox
+                                name='professionMatch'
+                                value={professionMatch}
+                                onChange={handleFilterChange}
+                                className='gene-checkbox'
+                            />
+                            <div className='label'>Profession</div>
                         </div>
                     </div>
                 </div>
