@@ -41,6 +41,9 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
+    environment: 
+      name: github-pages
+      url: https://dfk.ketl.com
     if: github.ref == 'refs/heads/main'
     
     steps:
