@@ -113,7 +113,7 @@ const RegressiveSearchPage = () => {
 
         while (!isLastPage) {
             // Retrieve a page of hero listings from tavern
-            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, searchCriteria.network, classes, searchCriteria.summonProfession, pageSize, offset)
+            const pageOfListings = await getHeroDataByAuction(searchCriteria.auctionType, searchCriteria.network, classes, searchCriteria.summonProfession, searchCriteria.walletAddress, pageSize, offset)
             const listedHeroes = decodeRecessiveGenesAndNormalize(pageOfListings.heroes)
 
             // Analyze each of the heroes in auction

@@ -9,7 +9,7 @@ const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.
 /*
  * auctionType: sale | assisting
  */
-const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.harmony.id, mainClasses = [], profession = '', take = 50, skip = 0) => {
+const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.harmony.id, mainClasses = [], profession = '', walletAddress = '', take = 50, skip = 0) => {
   console.log(`Retrieving hero listings ${skip + 1} - ${skip + take} from the Tavern`)
 
   const options = { headers: { 'Content-Type': 'application/json' } }
@@ -17,8 +17,16 @@ const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.har
   // Create a new GQL Client
   const graphQLClient = new GraphQLClient(apiv6_endpoint, options)
 
-  let filter = `${auctionType}Price_not: null
-                network: "${network}"`
+  let filter = ''
+  let price = ''
+  if(auctionType === 'wallet'){
+    filter = `owner: "${walletAddress}"`
+    }
+  else {
+    filter = `${auctionType}Price_not: null
+                  network: "${network}"`
+    price = `price: ${auctionType}Price`
+  }
 
   // If specified, add main class to filter
   if (mainClasses.length) {
@@ -31,9 +39,6 @@ const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.har
     filter = `${filter}
     profession: "${profession}"`
   }
-
-  const price = `price: ${auctionType}Price`
-
 
   // Define our query, this will return data for the first 1000 open auctions
   // 1000 is the max query size for GQL
@@ -66,13 +71,13 @@ const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.har
       foraging
       gardening
       mining
-  
+
       stamina
-  
+
       summonsRemaining
       maxSummons
       summons
-      
+
       active1
       active2
       passive1
@@ -82,7 +87,7 @@ const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.har
       statsUnknown1
       statsUnknown2
       element
-  
+
       strength
       agility
       endurance
