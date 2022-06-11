@@ -151,7 +151,7 @@ const RegressiveSearchPage = () => {
             setRandomLoadingMessage()
 
             offset += pageSize
-            isLastPage = pageOfListings.length === 0
+            isLastPage = pageOfListings.heroes.length === 0
 
             await delay(1000)
 
