@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import unionBy from 'lodash/unionBy'
 import { decodeRecessiveGenesAndNormalize } from '@thanpolas/degenking/src/heroes-helpers/recessive-genes.ent'
 import { getHeroDataByAuction } from '../../services/auction.service'
 import { calcuateSummonCost } from '../../helpers/prices.helper'
@@ -141,7 +142,7 @@ const RegressiveSearchPage = () => {
             console.log(`adding ${filteredHeroes.length} new heroes`)
 
             // Merge and sort heroes by highest to lowest probability of summoning target class
-            allHeroes = allHeroes.concat(filteredHeroes)
+            allHeroes = unionBy(allHeroes, filteredHeroes, 'id')
 
             console.log(`now ${allHeroes.length} total heroes`)
 
@@ -150,12 +151,12 @@ const RegressiveSearchPage = () => {
             setRandomLoadingMessage()
 
             offset += pageSize
-            isLastPage = pageOfListings.length === 0
+            isLastPage = pageOfListings.heroes.length === 0
 
             await delay(1000)
 
             // ONLY LOAD 1 PAGE FOR TESTING
-            isLastPage = offset > 200
+            // isLastPage = offset > 200
         }
 
         setIsLoading(false)
