@@ -17,7 +17,7 @@ import './styles.css'
 const JewelIcon = () => (<img src='/jewel50.png' className='jewel-icon' alt='Jewel' />)
 const CrystalIcon = () => (<img src='/crystal100.png' className='jewel-icon' alt='Jewel' />)
 
-const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }]
+const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }, { label: 'wallet', value: 'wallet' }]
 
 const networks = [{ label: 'Serendale', value: NETWORKS.harmony.id }, { label: 'Crystalvale', value: NETWORKS.dfkchain.id }]
 
@@ -45,6 +45,7 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
     const [originRealm, setOriginRealm] = useState(REALMS.serendale.id)
     const [heroId, setHeroId] = useState('')
     const [summonClassOptions, setSummonClassOptions] = useState([])
+    const [walletAddress, setWalletAddress] = useState('')
 
     useEffect(() => {
         // Renders the list of options for the Summon Class dropdown
@@ -91,8 +92,8 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
 
 
     // Saves changes to the selected Hero
-    const handleHeroIdChange = (event) => {
-        setHeroId(event.target.value)
+    const handleHeroIdChange = ({ target }) => {
+        setHeroId(target.value)
     }
 
 
@@ -133,6 +134,10 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
         setSummonClass(target.value)
     }
 
+    // Saves changes to the select Wallet Address
+    const handleWalletAddressChange = ({ target }) => {
+        setWalletAddress(target.value)
+    }
 
     // Submits the form to the calling component
     const handleSubmit = () => {
@@ -142,7 +147,8 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
             network,
             originRealm,
             summonClass,
-            summonProfession: summonProfession === 'all' ? '' : summonProfession
+            summonProfession: summonProfession === 'all' ? '' : summonProfession,
+            walletAddress
         }
         onSubmit && onSubmit(searchCriteria)
     }
@@ -164,19 +170,34 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
                     {auctionTypeOptions}
                 </Select>
             </Grid>
-            <Grid item>
-                in the
-                <Select
-                    name='network'
-                    className='network-selecter'
-                    value={network}
-                    variant='standard'
-                    onChange={handleNetworkChange}
-                >
-                    {networkOptions}
-                </Select>
-                tavern,
-            </Grid>
+            {auctionType === 'wallet' && (
+                <Grid item>
+                    <TextField
+                        className='wallet-address-selector'
+                        placeholder='wallet address'
+                        name='wallet-address'
+                        value={walletAddress}
+                        variant='standard'
+                        onChange={handleWalletAddressChange}
+                    />
+                </Grid>
+            )}
+
+            {auctionType !== 'wallet' && (
+                <Grid item>
+                    in the
+                    <Select
+                        name='network'
+                        className='network-selecter'
+                        value={network}
+                        variant='standard'
+                        onChange={handleNetworkChange}
+                    >
+                        {networkOptions}
+                    </Select>
+                    tavern,
+                </Grid>
+            )}
             <Grid item className='hero-container'>
                 who can match with hero
                 <Select
