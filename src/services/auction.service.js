@@ -19,9 +19,10 @@ const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.har
 
   let filter = ''
   let price = ''
-  if(auctionType === 'wallet'){
+  
+  if (auctionType === 'wallet') {
     filter = `owner: "${walletAddress}"`
-    }
+  }
   else {
     filter = `${auctionType}Price_not: null
                   network: "${network}"`

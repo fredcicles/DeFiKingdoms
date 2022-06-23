@@ -17,8 +17,7 @@ import './styles.css'
 const JewelIcon = () => (<img src='/jewel50.png' className='jewel-icon' alt='Jewel' />)
 const CrystalIcon = () => (<img src='/crystal100.png' className='jewel-icon' alt='Jewel' />)
 
-//todo add wallet
-const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }, { label: 'wallet', value: 'wallet'}]
+const auctionTypes = [{ label: 'sale', value: 'sale' }, { label: 'rent', value: 'assisting' }, { label: 'wallet', value: 'wallet' }]
 
 const networks = [{ label: 'Serendale', value: NETWORKS.harmony.id }, { label: 'Crystalvale', value: NETWORKS.dfkchain.id }]
 
@@ -86,7 +85,6 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
         }
     }, [defaultSummonClass])
 
-    // Todo: If it is wallet, change ui
     // Saves changes to the selected Auction Type
     const handleAuctionTypeChange = ({ target }) => {
         setAuctionType(target.value)
@@ -174,14 +172,14 @@ const SearchFormSimple = ({ defaultSummonClass, isHeroLoaded, onHeroChange, onSu
             </Grid>
             {auctionType === 'wallet' && (
                 <Grid item>
-                  <TextField
-                      className='wallet-address-selector'
-                      placeholder='wallet address'
-                      name='wallet-address'
-                      value={walletAddress}
-                      variant='standard'
-                      onChange={handleWalletAddressChange}
-                  />
+                    <TextField
+                        className='wallet-address-selector'
+                        placeholder='wallet address'
+                        name='wallet-address'
+                        value={walletAddress}
+                        variant='standard'
+                        onChange={handleWalletAddressChange}
+                    />
                 </Grid>
             )}
 
