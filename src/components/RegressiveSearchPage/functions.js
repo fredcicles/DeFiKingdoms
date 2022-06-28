@@ -37,23 +37,37 @@ export const sortAndFilterHeroes = (heroes, filters, sortBy, mutationClass) => {
         const subclassMatch = !filters.subclassMatch || hero.subClassGenes[0] === hero.subClassGenes[1]
         const professionMatch = !filters.professionMatch || hero.professionGenes[0] === hero.professionGenes[1]
 
-        return maxSummons && remainingSummons && minGen && maxGen && mainClass && classMatch && subclassMatch && professionMatch
+        return maxSummons &&
+            remainingSummons &&
+            minGen &&
+            maxGen &&
+            mainClass &&
+            classMatch &&
+            subclassMatch &&
+            professionMatch
     })
 
-    // Heroes are sorted by Probability by default, only sort here if a different sorting is requested
-    sortedHeroes = sortBy === 'probability' ?
-        sortedHeroes.sort((a, b) => a.targetProbability > b.targetProbability ? -1 : a.targetProbability < b.targetProbability ? 1 : 0) :
-        sortedHeroes.sort((a, b) => {
-            if (sortBy === 'price') {
-                const aPrice = a.price + (a.auctionType === 'sale' ? 0 : a.summonCost)
-                const bPrice = b.price + (b.auctionType === 'sale' ? 0 : b.summonCost)
-                return aPrice > bPrice ? 1 : aPrice < bPrice ? -1 : 0
-            }
+    // Sort heroes by probability or price
+    switch (sortBy) {
+        case 'probability':
+            return sortedHeroes.sort(sortByProbability)
+        case 'price':
+            return sortedHeroes.sort(sortByPrice)
+        default:
+            return sortedHeroes
+    }
+}
 
-            return 0
-        })
+const sortByProbability = (a, b) => {
+    return a.targetProbability > b.targetProbability ?
+        -1 :
+        a.targetProbability < b.targetProbability ? 1 : 0
+}
 
-    return sortedHeroes
+const sortByPrice = (a, b) => {
+    const aPrice = a.price + (a.auctionType === 'sale' ? 0 : a.summonCost)
+    const bPrice = b.price + (b.auctionType === 'sale' ? 0 : b.summonCost)
+    return aPrice > bPrice ? 1 : aPrice < bPrice ? -1 : 0
 }
 
 export const sheerFix = (hero) => {
@@ -66,3 +80,5 @@ export const sheerFix = (hero) => {
     fix(hero.mainClassGenes)
     fix(hero.subClassGenes)
 }
+
+export const toCrystalValeHeroId = heroId => `${'1000000000000'.slice(0, 13 - heroId.length)}${heroId}`

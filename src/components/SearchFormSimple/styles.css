@@ -61,13 +61,14 @@
     width: 140px;
 }
 
-.wallet-address-selector input {
-    width: 400px;
-    font-size: 0.9em;
-    text-align: center;
+.wallet-button {
+    padding: 5px 0 !important;
+    font-size: 0.8em !important;
 }
 
-
+.wallet-form-icon:hover {
+    cursor: pointer;
+}
 
 .search-form-toggle {
     text-decoration: none;

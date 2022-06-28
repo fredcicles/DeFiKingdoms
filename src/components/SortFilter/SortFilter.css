@@ -43,6 +43,7 @@
 .sort-filter .include-summon-class {
     display: flex;
     flex-direction: column;
+    text-align: center;
     font-size: 0.8em;
 }
 
