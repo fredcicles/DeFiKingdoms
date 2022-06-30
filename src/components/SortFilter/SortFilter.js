@@ -18,6 +18,8 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
     const [subclassMatch, setSubclassMatch] = useState(false)
     const [professionMatch, setProfessionMatch] = useState(false)
     const [includeSummonClass, setIncludeSummonClass] = useState(false)
+    const [includeAllHeroes, setIncludeAllHeroes] = useState(false)
+
 
     const handleFilterChange = ({ target }) => {
         let _summonsRemaining = summonsRemaining
@@ -28,6 +30,7 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
         let _subclassMatch = subclassMatch
         let _professionMatch = professionMatch
         let _includeSummonClass = includeSummonClass
+        let _includeAllHeroes = includeAllHeroes
 
         switch (target.name) {
             case 'summonsRemaining':
@@ -63,11 +66,13 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                 _includeSummonClass = target.checked
                 setIncludeSummonClass(_includeSummonClass)
                 break;
+            case 'includeAllHeroes':
+                _includeAllHeroes = target.checked
+                setIncludeAllHeroes(_includeAllHeroes)
+                break;
             default:
                 console.log('unknown search filter selected')
         }
-
-        console.log(`${target.name} set to ${target.value}`)
 
         onFiltersChange({
             summonsRemaining: _summonsRemaining,
@@ -77,13 +82,16 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
             classMatch: _classMatch,
             subclassMatch: _subclassMatch,
             professionMatch: _professionMatch,
-            includeSummonClass: _includeSummonClass
+            includeSummonClass: _includeSummonClass,
+            includeAllHeroes: _includeAllHeroes
         })
     }
+
 
     const handleViewToggled = (event) => {
         onViewToggled(event.target.checked)
     }
+
 
     const handleSortByChange = ({ target }) => {
         setSort(target.value)
@@ -204,13 +212,28 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                         </div>
                     </div>
                 </div>
-                <div className='include-summon-class'>
-                    <div>Include Summon Class</div>
-                    <Checkbox
-                        name='includeSummonClass'
-                        value={includeSummonClass}
-                        onChange={handleFilterChange}
-                    />
+                <div className='gene-match'>
+                    <div className='heading'>Include</div>
+                    <div className='options'>
+                        <div className='option'>
+                            <Checkbox
+                                name='includeSummonClass'
+                                value={includeSummonClass}
+                                onChange={handleFilterChange}
+                                className='gene-checkbox'
+                            />
+                            <div className='label'>Summon Class</div>
+                        </div>
+{/*                         <div className='option'>
+                            <Checkbox
+                                name='includeAllHeroes'
+                                value={includeAllHeroes}
+                                onChange={handleFilterChange}
+                                className='gene-checkbox'
+                            />
+                            <div className='label'>All Heroes</div>
+                        </div>
+ */}                    </div>
                 </div>
             </Grid>
         </Grid>

@@ -9,7 +9,7 @@ const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.
 /*
  * auctionType: sale | assisting
  */
-const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.harmony.id, mainClasses = [], profession = '', walletAddress = '', take = 50, skip = 0) => {
+const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.harmony.id, mainClasses = [], profession = 'all', walletAddresses = [], take = 50, skip = 0) => {
   console.log(`Retrieving hero listings ${skip + 1} - ${skip + take} from the Tavern`)
 
   const options = { headers: { 'Content-Type': 'application/json' } }
@@ -19,11 +19,10 @@ const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.har
 
   let filter = ''
   let price = ''
-  
+
   if (auctionType === 'wallet') {
-    filter = `owner: "${walletAddress}"`
-  }
-  else {
+    filter = `owner_in: [${walletAddresses.map(address => `"${address}"`)}]`
+  } else {
     filter = `${auctionType}Price_not: null
                   network: "${network}"`
     price = `price: ${auctionType}Price`
@@ -36,7 +35,7 @@ const getHeroDataByAuction = async (auctionType = 'sale', network = NETWORKS.har
   }
 
   // If specified, add profession to filter
-  if (profession) {
+  if (profession !== 'all') {
     filter = `${filter}
     profession: "${profession}"`
   }
