@@ -85,7 +85,8 @@ const RegressiveSearchPage = () => {
                 setMainHero(_mainHero)
 
                 // Set a default for the class to summon based on the selected hero
-                handleSearchCriteriaChange({ key: 'summonClass', value: _mainHero.mutationClass })
+                _mainHero.mutationClass &&
+                    handleSearchCriteriaChange({ key: 'summonClass', value: _mainHero.mutationClass })
             } else {
                 setLoadingMessage('Hero not found.')
                 setIsLoading(true)
