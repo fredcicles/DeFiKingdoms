@@ -49,6 +49,16 @@ export const sortAndFilterHeroes = (heroes, filters, sortBy, mutationClass) => {
                 const bPrice = b.price + (b.auctionType === 'sale' ? 0 : b.summonCost)
                 return aPrice > bPrice ? 1 : aPrice < bPrice ? -1 : 0
             }
+            if (sortBy === 'summonsLeft'){
+                const aSummons = a.maxSummons
+                const bSummons = b.maxSummons
+                return aSummons < bSummons ? 1 : aSummons > bSummons ? -1 : 0
+            }
+            if (sortBy === 'generation'){
+                const aGeneration = a.generation
+                const bGeneration = b.generation
+                return aGeneration > bGeneration ? 1 : aGeneration < bGeneration ? -1 : 0
+            }
 
             return 0
         })

@@ -115,6 +115,8 @@ const SortFilter = ({ onFiltersChange, onSortByChange, onViewToggled, visible })
                     >
                         <MenuItem key='probability' value='probability'>Probability</MenuItem>
                         <MenuItem key='price' value='price'>Price</MenuItem>
+                        <MenuItem key='summons' value='summonsLeft'>Summons</MenuItem>
+                        <MenuItem key='generation' value='generation'>Generation</MenuItem>
                     </Select>
                 </div>
             </Grid>
