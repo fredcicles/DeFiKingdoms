@@ -1,84 +1,141 @@
-// First we need to require our GraphQL Package
-import { GraphQLClient, gql } from 'graphql-request'
+import { DfkApi } from './dfk.api.service'
+import { CamelCase, PascalCase } from '../helpers/format.helpers'
+import { decodeRecessiveGenesAndNormalize } from '@thanpolas/degenking/src/heroes-helpers/recessive-genes.ent'
+import { calcuateSummonCost } from '../helpers/prices.helper'
+import { getMutationClass } from '../helpers/genes.helpers'
 
-export const getHeroById = async (id) => {
-    // Then define our endpoint URL
-    //const apiv5_endpoint = 'http://graph3.defikingdoms.com/subgraphs/name/defikingdoms/apiv5'
-	const apiv6_endpoint = 'https://defi-kingdoms-community-api-gateway-co06z8vi.uc.gateway.dev/graphql'
+// Retrieve a list of heroes based on specified search criteria
+export const getHeroesBySearchCriteria = async (options, take = 50, skip = 0) => {
+	/*
+	 * auctionType: sale | assisting | wallet
+	 */
+	const { auctionType = 'sale', network, mainClasses = [], profession = 'all', wallets = [] } = options
 
-    // Create a new GQL Client
-    const graphQLClient = new GraphQLClient(apiv6_endpoint, {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    })
+	console.log(`Retrieving hero listings ${skip + 1} - ${skip + take} from the Tavern`)
 
-    // Define our query, this will return data for the first 1000 heroes
-    // 1000 is the max query size for GQL
-    const query = gql`
+	let filter = ''
+	let price = ''
+
+	if (options.auctionType === 'wallet') {
+		filter = `owner_in: [${wallets.map(wallet => `"${wallet}"`)}]`
+	} else {
+		filter = `${auctionType}Price_not: null
+                  network: "${network}"`
+		price = `price: ${auctionType}Price`
+	}
+
+	// If specified, add main class to filter
+	if (mainClasses.length) {
+		filter = `${filter}
+    			  mainClass_in: [${mainClasses.map(name => `"${PascalCase(name)}"`)}]`
+	}
+
+	// If specified, add profession to filter
+	if (profession !== 'all') {
+		filter = `${filter}
+    			  profession: "${profession}"`
+	}
+
+	let heroes = await getHeroes(filter, 'all', price, take, skip)
+	console.log(`${heroes.length} hero listings retrieved from the Tavern`)
+	return heroes
+}
+
+// Retrieve the specific hero
+export const getHeroById = async id => {
+	const filter = `id: ${id}`
+	return await getHeroes(filter)
+}
+
+// Retrieve all heroes in the specified wallets
+export const getAllHeroesFromWallets = async wallets => {
+	const filter = `owner_in: [${wallets.map(wallet => `"${wallet}"`)}]`
+	return await getHeroes(filter, 'all', '', 1000, 0)
+}
+
+// Retrieve the specific hero
+const getHeroes = async (filter, propertySet = 'all', customProperties = '', take = 1, skip = 0) => {
+	const allProperties = `
+	id
+	owner{
+	  name
+	}
+	firstName
+	lastName
+	originRealm
+	network
+	rarity
+	gender
+	generation
+	mainClass
+	subClass
+	level
+	profession
+	fishing
+	foraging
+	gardening
+	mining
+	stamina
+	summonsRemaining
+	maxSummons
+	summons
+	active1
+	active2
+	passive1
+	passive2
+	statBoost1
+	statBoost2
+	statsUnknown1
+	statsUnknown2
+	element
+	strength
+	agility
+	endurance
+	wisdom
+	dexterity
+	vitality
+	intelligence
+	luck
+	status
+	hpFullAt
+	mpFullAt
+	statGenesRaw: statGenes`
+
+	const basicProperties = `id
+	rarity
+	gender
+	generation
+	mainClass
+	subClass
+	level
+	profession`
+	
+	// Query to retrieve a single hero based on their id
+	const query = `
 	{
-		heroes( 
-			orderBy: numberId
-			orderDirection: asc
-			where: 
-			{
-				id: ${id}
-		   	}
+		heroes(
+			first: ${take}
+			skip: ${skip}
+			where:{
+			  ${filter}
+			}
 		)
 		{
-			id
-			owner{
-			  name
-			}
-
-			firstName
-			lastName
-			originRealm
-			network
-			rarity
-			gender
-			generation
-			mainClass
-			subClass
-			level
-			profession
-			fishing
-			foraging
-			gardening
-			mining
-		
-			stamina
-		
-			summonsRemaining
-			maxSummons
-			summons
-			
-			active1
-			active2
-			passive1
-			passive2
-			statBoost1
-			statBoost2
-			statsUnknown1
-			statsUnknown2
-			element
-		
-			strength
-			agility
-			endurance
-			wisdom
-			dexterity
-			vitality
-			intelligence
-			luck
-	  
-			status
-			hpFullAt
-			mpFullAt
-			statGenesRaw: statGenes
+			${propertySet === 'basic' ? basicProperties : allProperties}
+			${customProperties}
 		}
 	}`
 
-    let data = await graphQLClient.request(query)
-    return data
+	const result = await DfkApi.get(query)
+
+	// Add any calculated value that should apply to all heroes
+	let heroes = decodeRecessiveGenesAndNormalize(result.heroes)
+	heroes = heroes.map(hero => ({
+		...hero,
+		displayId: hero.id.length === 13 ? Number(hero.id.slice(1)).toString() : hero.id,
+		summonCost: calcuateSummonCost(hero),
+		mutationClass: getMutationClass(CamelCase(hero.mainClass))
+	}))
+
+	return heroes
 }

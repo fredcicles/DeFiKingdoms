@@ -4,59 +4,77 @@ import PropTypes from 'prop-types'
 import {
     auctionTypeOptions,
     networkOptions,
-    originRealmOptions,
     professionOptions,
-    summonClassOptions
-} from './menu-options'
+    classOptions
+} from '../../constants/menu-options'
 
 import Button from '@mui/material/Button'
+import HeroLookup from '../HeroLookup'
+import HeroIcon from '@mui/icons-material/PersonAddAlt1'
 import Grid from '@mui/material/Grid'
 import SearchIcon from '@mui/icons-material/PersonSearch'
 import Select from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
 import WalletIcon from '@mui/icons-material/AccountBalanceWalletOutlined'
 import WalletsForm from './WalletsForm'
 
 import './styles.css'
 
-const SearchFormSimple = ({ isSearchEnabled, onHeroChange, onSearchCriteriaChange, onSearch, onToggle, values }) => {
-    const [isWalletsFormVisible, setWalletsFormVisibility] = useState(false)
-
-    // Loads the selected hero
-    const handleHeroIdBlur = () => {
-        onHeroChange && onHeroChange(values.originRealm)
-    }
-
-    // Loads the selected hero when the enter key is pressed inside the HeroId text box
-    const handleHeroIdEnter = (event) => {
-        if (event.key === 'Enter') {
-            handleHeroIdBlur()
-        }
-    }
+const SearchFormSimple = ({ isSearchEnabled, onHeroChange, onSearchCriteriaChange, onSearch, values }) => {
+    const [isHeroLookupVisible, setHeroLookupVisible] = useState(false)
+    const [isSearchWalletsFormVisible, setSearchWalletsFormVisibility] = useState(false)
 
     // Saves changes to the form data
     const handleFormChange = ({ target }) => {
         onSearchCriteriaChange({ key: target.name, value: target.value })
     }
 
-    // Saves changes to the selected wallet addresses
-    const handleWalletsChange = event  => {
+    // Saves changes to the selected hero
+    const handleHeroChange = event => {
+        onHeroChange(event)
+        hideHeroLookup()
+    }
+
+    // Saves changes to the selected hero
+    const hideHeroLookup = () => {
+        setHeroLookupVisible(false)
+    }
+
+    // Saves changes to the selected search wallet addresses
+    const handleSearchWalletsChange = event => {
         handleFormChange(event)
-        setWalletsFormVisibility(false)
+        setSearchWalletsFormVisibility(false)
     }
 
-    // Displays a popup for entering wallet addresses
-    const showWalletsForm = () => {
-        setWalletsFormVisibility(true)
+    // Displays a popup for entering hero wallet addresses
+    const showHeroLookup = () => {
+        setHeroLookupVisible(true)
     }
 
-    const canSubmit = isSearchEnabled && values.summonClass
+    // Displays a popup for entering search wallet addresses
+    const showSearchWalletsForm = () => {
+        setSearchWalletsFormVisibility(true)
+    }
 
     return (
         <>
+            <div className='hero-container'>
+                1. Select the main hero
+                <Button
+                    className='wallet-button'
+                    onClick={showHeroLookup}
+                >
+                    {values.mainHero && values.mainHero.id} <HeroIcon />
+                </Button>
+                <HeroLookup
+                    name='mainHero'
+                    open={isHeroLookupVisible}
+                    onClose={hideHeroLookup}
+                    onSave={handleHeroChange}
+                />
+            </div>
             <Grid container className='search-form-simple' justifyContent='center' spacing={0}>
                 <Grid item>
-                    Find me heroes for
+                    2. Find me heroes for
                     <Select
                         label='Auction Type'
                         name='auctionType'
@@ -73,9 +91,9 @@ const SearchFormSimple = ({ isSearchEnabled, onHeroChange, onSearchCriteriaChang
                         <Grid item>
                             <Button
                                 className='wallet-button'
-                                onClick={showWalletsForm}
+                                onClick={showSearchWalletsForm}
                             >
-                                {`(${values.walletAddresses.length} addresses selected)`}
+                                {`(${values.searchWallets.length} addresses selected)`}
                                 <WalletIcon
                                     className='wallet-form-icon'
                                     fontSize='small'
@@ -83,10 +101,10 @@ const SearchFormSimple = ({ isSearchEnabled, onHeroChange, onSearchCriteriaChang
                             </Button>
                         </Grid>
                         <WalletsForm
-                            name='walletAddresses'
-                            open={isWalletsFormVisible}
-                            onSave={handleWalletsChange}
-                            wallets={values.walletAddresses}
+                            name='searchWallets'
+                            open={isSearchWalletsFormVisible}
+                            onSave={handleSearchWalletsChange}
+                            wallets={values.searchWallets}
                         />
                     </>
                 )}
@@ -105,31 +123,8 @@ const SearchFormSimple = ({ isSearchEnabled, onHeroChange, onSearchCriteriaChang
                         tavern,
                     </Grid>
                 )}
-                <Grid item className='hero-container'>
-                    who can match with hero
-                    <Select
-                        className='origin-realm-selecter'
-                        name='originRealm'
-                        onChange={handleFormChange}
-                        value={values.originRealm}
-                        variant='standard'
-                    >
-                        {originRealmOptions}
-                    </Select>
-                    #
-                    <TextField
-                        className='hero-id-selecter'
-                        name='heroId'
-                        onBlur={handleHeroIdBlur}
-                        onChange={handleFormChange}
-                        onKeyPress={handleHeroIdEnter}
-                        placeholder='hero id'
-                        value={values.heroId}
-                        variant='standard'
-                    />
-                </Grid>
                 <Grid item>
-                    to summon a
+                    &nbsp;who can pair with the main hero to summon a
                     <Select
                         className='summoned-class-selecter'
                         label='Class to be summoned'
@@ -138,7 +133,7 @@ const SearchFormSimple = ({ isSearchEnabled, onHeroChange, onSearchCriteriaChang
                         value={values.summonClass}
                         variant='standard'
                     >
-                        {summonClassOptions}
+                        {classOptions}
                     </Select>
                 </Grid>
                 <Grid item>
@@ -156,13 +151,12 @@ const SearchFormSimple = ({ isSearchEnabled, onHeroChange, onSearchCriteriaChang
                 </Grid>
                 <Grid item>
                     <Button
-                        disabled={!canSubmit}
+                        disabled={!isSearchEnabled}
                         onClick={onSearch}
                         variant='contained'
                     >
                         <SearchIcon />
                     </Button>
-                    {/* <a href="#" className='search-form-toggle' onClick={onToggle}>Advanced Search</a> */}
                 </Grid>
             </Grid>
         </>
@@ -174,13 +168,14 @@ SearchFormSimple.propTypes = {
     onHeroChange: PropTypes.func,
     onSearch: PropTypes.func,
     onSearchCriteriaChange: PropTypes.func,
-    onToggle: PropTypes.func,
     values: PropTypes.object
 }
 
 SearchFormSimple.defaultProps = {
     isSearchEnabled: false,
-    onToggle: () => { }
+    onHeroChange: () => { },
+    onSearch: () => { },
+    onSearchCriteriaChange: () => { },
 }
 
 export default SearchFormSimple

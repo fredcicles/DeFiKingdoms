@@ -38,7 +38,9 @@
 }
 
 .hero-container {
-    margin-left: 5px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .auction-type-selecter {
@@ -46,7 +48,7 @@
 }
 
 .hero-id-selecter>div {
-    width: 70px;
+    width: 120px;
 }
 
 .network-selecter>div {

@@ -1,8 +1,9 @@
-import { NETWORKS, REALMS } from '../../constants/realms'
-import { CLASS_REV, basicClasses, advancedClasses, eliteClasses, exaltedClasses, PROFESSIONS_AR as professions } from '../../constants/degenking'
-import { CrystalIcon, JewelIcon } from '../Icons'
+import { NETWORKS, REALMS } from './constants'
+import { CLASS_REV, basicClasses, advancedClasses, eliteClasses, exaltedClasses, PROFESSIONS_AR as professions } from './degenking'
+import { CrystalIcon, JewelIcon } from '../components/Icons'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
+import ToggleButton from '@mui/material/ToggleButton'
 
 const options = (array) => {
     return array.map(item => {
@@ -25,12 +26,32 @@ const networks = [
 
 const professionAllOption = { label: 'any profession', value: 'all' }
 
+const rarities = [
+    { label: 'Common', value: '0' },
+    { label: 'Uncommon', value: '1' },
+    { label: 'Rare', value: '2' },
+    { label: 'Legendary', value: '3' },
+    { label: 'Epic', value: '4' },
+]
+
+const sort = [
+    { label: 'ID', value: 'id' },
+    { label: 'Gen', value: 'generation' },
+    { label: 'Level', value: 'level' },
+    { label: 'Main Class', value: 'mainClass' },
+    { label: 'Profession', value: 'profession' },
+    { label: 'Rarity', value: 'rarity' },
+]
+
 export const auctionTypeOptions = options(auctionTypes)
 
 export const networkOptions = options(networks)
 
 export const professionOptions = options([professionAllOption, ...professions])
 
+export const rarityOptions = options(rarities)
+
+export const sortOptions = options(sort)
 
 // Renders the list of options for the Summon Class dropdown
 const basic = basicClasses
@@ -49,7 +70,7 @@ const exalted = exaltedClasses
     .sort()
     .map(name => (<MenuItem key={name} value={name}>{CLASS_REV[name]}</MenuItem>))
 
-export const summonClassOptions = [
+export const classOptions = [
     (<ListSubheader key='basic'>Basic Classes</ListSubheader>),
     ...basic,
     (<ListSubheader key='advanced'>Advanced Classes</ListSubheader>),
@@ -67,4 +88,13 @@ export const originRealmOptions = [
     <MenuItem key={REALMS.crystalvale.id} value={REALMS.crystalvale.id}>
         <CrystalIcon />
     </MenuItem>
+]
+
+export const originRealmToggleOptions = [
+    <ToggleButton value={REALMS.serendale.id} aria-label={REALMS.serendale.name}>
+        <JewelIcon />
+    </ToggleButton>,
+    <ToggleButton value={REALMS.crystalvale.id} aria-label={REALMS.crystalvale.name}>
+        <CrystalIcon />
+    </ToggleButton>
 ]

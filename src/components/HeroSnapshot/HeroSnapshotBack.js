@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import HeroSnapshotGenes from './HeroSnapshotGenes'
 import HeroSnapshotStatGenes from './HeroSnapshotStatGenes'
-import { GENE_TYPES } from '../../constants/hero-genes'
+import { GENE_TYPES } from '../../constants/constants'
 
 const HeroSnapshotBack = ({ highlights, hero }) => {
     return (

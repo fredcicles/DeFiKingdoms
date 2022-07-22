@@ -1,5 +1,5 @@
 import { getHeroTier } from '@thanpolas/degenking/src/heroes-helpers/summon-utils.ent'
-import { classMutationPairings } from '../constants/hero-classes'
+import { MUTATION_PAIRS_ARR } from '../constants/constants'
 
 const dominantGeneProbabilities = [0.75, 0.1875, 0.046875, 0.015625]
 
@@ -74,8 +74,10 @@ const getMutationProbability = (hero1DominantGene, hero2DominantGene) => {
 }
 
 
-const lookupMutation = (gene1, gene2) => classMutationPairings.find(pair => {
-    const m = gene1 !== gene2 && pair.classes.includes(gene1) && pair.classes.includes(gene2)
+const lookupMutation = (gene1, gene2) => MUTATION_PAIRS_ARR.find(pair => {
+    const m = gene1 !== gene2 &&
+        pair.classes.includes(gene1) &&
+        pair.classes.includes(gene2)
     return m
 })
 
@@ -124,7 +126,7 @@ export const getPossibleSummonClasses = (parentClass, summonedClass, include) =>
     if (parentClass === summonedClass) return classes
 
     // If the parentClass could mutate to the summonedClass, add the complimentary parent class
-    const mutationPairing = classMutationPairings.find(pair => pair.mutation === summonedClass)
+    const mutationPairing = MUTATION_PAIRS_ARR.find(pair => pair.mutation === summonedClass)
 
     if (mutationPairing) {
         const parentIsMutatable = mutationPairing.classes.find(c => c === parentClass)
@@ -139,5 +141,5 @@ export const getPossibleSummonClasses = (parentClass, summonedClass, include) =>
 
 // Retrieves the mutation class for the specified base class
 export const getMutationClass = heroClass => {
-    return classMutationPairings.find(pair => pair.classes.includes(heroClass)).mutation
+    return MUTATION_PAIRS_ARR.find(pair => pair.classes.includes(heroClass))?.mutation
 }

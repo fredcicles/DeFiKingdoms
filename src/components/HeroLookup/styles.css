@@ -1,0 +1,75 @@
+.hero-lookup .instructions {
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+.manual-selecter {
+    display: flex;
+}
+
+.hero-summary {
+    color: white;
+    font-size: 0.8em;
+    margin-left: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.common {
+    background-color: #93979D;
+    /* background-image: url("../../images/cards/commonCardBackground.3ddb1a56.png") */
+}
+
+.uncommon {
+    background-color: #72C283;
+    /* background-image: url("../../images/cards/uncommonCardBackground.29676ab8.png") */
+}
+
+.rare {
+    background-color: #64AFAE;
+    /* background-image: url("../../images/cards/rareCardBackground.e75dff9e.png") */
+}
+
+.legendary {
+    background-color: #D36B20;
+    /* background-image: url("../../images/cards/legendaryCardBackground.58381f20.png") */
+}
+
+.mythic {
+    background-color: #B56FD3;
+    /* background-image: url("../../images/cards/mythicCardBackground.e2cdd083.png") */
+}
+
+.origin-realm-label .MuiFormControlLabel-label {
+    font-size: 0.9em;
+}
+
+.origin-realm-selecter .origin-realm-radio {
+    padding: 5px;
+}
+
+.origin-realm-selecter .jewel-icon {
+    width: 20px;
+    height: 20px;
+    margin: 0 0 0 0;
+}
+
+.wallets-selecter {
+    display: flex;
+}
+
+.wallets-form {
+    width: 100%;
+}
+
+.hero-lookup-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-lookup-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

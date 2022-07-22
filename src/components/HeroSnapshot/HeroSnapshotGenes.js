@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { CLASS_REV } from '../../constants/degenking'
-import { GENE_TITLES, GENE_TYPES } from '../../constants/hero-genes'
+import { GENE_TITLES_ARR, GENE_TYPES } from '../../constants/constants'
 
 const PROFESSIONS = {
     mining: 'Mining',
@@ -16,12 +16,15 @@ const HeroSnapshotGenes = ({ className, genes, heroid, highlighted, title, type 
         {genes.map((gene, i) => {
             // Get the nice name for the gene
             let geneName = type === GENE_TYPES.Classes ? CLASS_REV[gene] : type === GENE_TYPES.Professions ? PROFESSIONS[gene] : gene
+            
             // Back-up, in case gene is not in the appropriate array
             if (!geneName) geneName = gene
 
+            const geneTitle = GENE_TITLES_ARR[i]
+
             return (
-                <div key={`${heroid}-${GENE_TITLES[i]}`} className='gene'>
-                    <div className='label'>{GENE_TITLES[i]}:</div>
+                <div key={`${heroid}-${geneTitle}`} className='gene'>
+                    <div className='label'>{geneTitle}:</div>
                     <div className={`value${highlighted && highlighted.includes(gene) ? ' highlighted' : ''}`}>{geneName}</div>
                 </div>
             )

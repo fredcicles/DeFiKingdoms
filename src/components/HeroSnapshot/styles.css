@@ -44,21 +44,6 @@
     border-bottom: 1px solid white;
 }
 
-.hero-snapshot-name {
-    text-align: center;
-    font-weight: 800;
-    font-size: 1.1em;
-    margin-bottom: 7px;
-}
-
-/* grc - Generation, Rarity, Classes */
-.hero-snapshot-grc {
-    font-weight: 600;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    text-align: center;
-}
-
 .hero-snapshot-owner {
     text-align: center;
     margin-top: 4px;

@@ -1,19 +1,13 @@
-import { decodeRecessiveGenesAndNormalize } from '@thanpolas/degenking/src/heroes-helpers/recessive-genes.ent'
 import { getHeroById } from '../../services/hero.service'
-import { calcuateSummonCost } from '../../helpers/prices.helper'
-import { getMutationClass } from '../../helpers/genes.helpers'
-import { CamelCase, PascalCase } from '../../helpers/format.helpers'
+import { PascalCase } from '../../helpers/format.helpers'
 
 export const getMainHero = async id => {
-    const data = await getHeroById(id)
+    const heroes = await getHeroById(id)
 
-    if (!data.heroes.length) return null
+    if (!heroes.length) return null
 
-    const hero = decodeRecessiveGenesAndNormalize(data.heroes)[0]
+    const hero = heroes[0]
     sheerFix(hero)
-    hero.displayId = hero.id.length === 13 ? Number(hero.id.slice(1)).toString() : hero.id
-    hero.summonCost = calcuateSummonCost(hero)
-    hero.mutationClass = getMutationClass(CamelCase(hero.mainClass))
 
     return hero
 }

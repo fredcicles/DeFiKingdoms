@@ -1,13 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Rarity } from '@thanpolas/degenking/src/constants/constants.const'
-import { NETWORKS, REALMS } from '../../constants/realms'
-import { PascalCase } from '../../helpers/format.helpers'
+import { NETWORKS, RARITIES_ARR } from '../../constants/constants'
 import HeroSnapshotBack from './HeroSnapshotBack'
 import HeroSnapshotFront from './HeroSnapshotFront'
+import HeroSummary from './HeroSummary'
 import './styles.css'
 
-const rarityClass = ['common', 'uncommon', 'rare', 'legendary', 'mythic']
 const JewelIcon = () => (<img src='/jewel50.png' className='jewel-icon' alt='Jewel' />)
 const CrystalIcon = () => (<img src='/crystal100.png' className='jewel-icon' alt='Jewel' />)
 
@@ -26,24 +24,12 @@ const PriceGroup = ({ label, showIcon, network, value }) => {
 }
 
 const HeroSnapshot = ({ highlights, hero, title, view }) => {
-    const grl = `Gen ${hero.generation} | ${Rarity[hero.rarity]} | Level ${hero.level}`
-    const cp = `${PascalCase(hero.mainClass)} / ${PascalCase(hero.subClass)} | ${PascalCase(hero.profession)}`
-    const icon = hero.originRealm === REALMS.serendale.id ? <JewelIcon /> : <CrystalIcon />
-
     return (
-        <div className={`hero-snapshot ${rarityClass[hero.rarity]}`}>
+        <div className={`hero-snapshot ${RARITIES_ARR[hero.rarity]}`}>
             <div className='hero-snapshot-title'>
                 {title}
             </div>
-            <div className='hero-snapshot-name'>
-                Hero {icon} #{hero.displayId}
-            </div>
-            <div className='hero-snapshot-grc'>
-                {grl}
-            </div>
-            <div className='hero-snapshot-grc'>
-                {cp}
-            </div>
+            <HeroSummary hero={hero} />
             {view === 'front' && <HeroSnapshotFront hero={hero} />}
             {view === 'back' && <HeroSnapshotBack hero={hero} highlights={highlights} />}
             <div className='hero-snapshot-pricing'>
