@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import unionBy from 'lodash/unionBy'
 import { getHeroesBySearchCriteria } from '../../services/hero.service'
 import { getProbabilityThatHeroesCanSummonTargetGene, getPossibleSummonClasses } from '../../helpers/genes.helpers'
